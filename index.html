@@ -8,7 +8,7 @@
 /* RESET */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Noto Sans JP",sans-serif;}
 html,body{height:100%;}
-body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 .wrapper{max-width:1100px;margin:0 auto;padding:20px;width:100%;}
 
 /* HERO */
@@ -26,31 +26,34 @@ body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:ant
 .red-alert .pulsing{animation:pulse .6s infinite;}
 @keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
 
-.row{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;}
+/* layout */
+.row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;margin-top:18px;}
 .col{flex:1 1 300px;}
 
 /* PLANS */
-.plans{margin-top:28px;}
-.plans h2{text-align:center;font-size:1.4rem;margin-bottom:14px;}
-.plan-list{display:grid;grid-template-columns:1fr;gap:18px;}
+.plans{margin-top:18px;}
+.plans h2{text-align:center;font-size:1.25rem;margin-bottom:12px;}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+.controls input, .controls select{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#111;color:white;}
+.plan-list{display:grid;grid-template-columns:1fr;gap:12px;}
 @media(min-width:900px){.plan-list{grid-template-columns:repeat(3,1fr);}}
-.plan-card{background:#131313;border-radius:12px;padding:14px;box-shadow:0 0 12px rgba(255,255,255,0.04);text-align:center;transition:.25s;position:relative;overflow:hidden;}
-.plan-card:hover{transform:translateY(-6px);box-shadow:0 0 28px rgba(255,255,255,0.08);}
-.plan-card img{width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
-.plan-card .price{font-size:1.1rem;margin:8px 0;color:#ffd166;}
-.favorite-btn{position:absolute;top:10px;right:10px;font-size:1.4rem;cursor:pointer; opacity:0.9;padding:6px;border-radius:8px;background:rgba(0,0,0,0.3);}
-.favorite-btn.active{color:#ff4d4d;background:rgba(255,255,255,0.04);}
+.plan-card{background:#131313;border-radius:12px;padding:12px;box-shadow:0 0 12px rgba(255,255,255,0.04);text-align:center;transition:.25s;position:relative;overflow:hidden;}
+.plan-card:hover{transform:translateY(-6px);box-shadow:0 0 28px rgba(255,255,255,0.06);}
+.plan-card img{width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;}
+.plan-card .price{font-size:1.05rem;margin:6px 0;color:#ffd166;}
+.favorite-btn{position:absolute;top:10px;right:10px;font-size:1.2rem;cursor:pointer; opacity:0.9;padding:6px;border-radius:8px;background:rgba(0,0,0,0.28);}
+.favorite-btn.active{color:#ff4d4d;background:rgba(255,255,255,0.03);}
 
-/* お気に入りページ (モーダル風) */
-#favoritePage{display:none;padding:20px 0;}
+/* お気に入りページ */
+#favoritePage{display:none;padding:12px 0;}
 #favoritePage h2{text-align:center;margin-bottom:12px;}
 #favoriteList{display:grid;grid-template-columns:1fr;gap:12px;}
 @media(min-width:900px){#favoriteList{grid-template-columns:repeat(3,1fr);}}
 
 /* FORM */
-.form-section{margin-top:28px;}
-.form-section h2{font-size:1.2rem;margin-bottom:10px;}
-form{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+.form-section{margin-top:20px;}
+.form-section h2{font-size:1.1rem;margin-bottom:10px;}
+form{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
 input,select,textarea{padding:12px 14px;border:none;border-radius:10px;background:#181818;color:white;font-size:0.98rem;border:1px solid rgba(255,255,255,0.04);}
 input::placeholder{opacity:0.6;}
 button.submitBtn{padding:12px;background:#00b7ff;border:none;border-radius:10px;color:black;font-size:1rem;cursor:pointer;transition:.2s;}
@@ -64,41 +67,36 @@ button.submitBtn:hover{background:#33c8ff;transform:translateY(-2px);}
 /* エラー画面 */
 #errorBox{display:none;margin-top:12px;padding:16px;background:#400;border-left:6px solid red;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.6);}
 
-/* エフェクト */
-@keyframes flash {0%{opacity:1;}50%{opacity:0.25;}100%{opacity:1;}}
-@keyframes shake {0%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
+/* エラー振動 */
+@keyframes vibrate {
+  0%{ transform: translateX(0) }
+  20%{ transform: translateX(-8px) }
+  40%{ transform: translateX(8px) }
+  60%{ transform: translateX(-6px) }
+  80%{ transform: translateX(6px) }
+  100%{ transform: translateX(0) }
+}
 
 /* 成功ボックス */
 .success{display:none;margin-top:12px;padding:16px;background:linear-gradient(135deg,#062,#098);border-left:6px solid #2f6;border-radius:10px;color:#051505;}
 
-/* コンフェティ */
-.confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:10000;}
+/* 花火用キャンバス（フルスクリーン） */
+#fireworksCanvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
 
-/* 全ボタン共通のかっこいいデザイン */
+/* コンフェティ (補助) */
+.confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:9998;}
+
+/* 全ボタン共通 */
 button, .glow-btn, #alertToggle, .submitBtn{
-  border:none;
-  border-radius:14px;
-  padding:10px 18px;
-  font-size:1rem;
-  font-weight:700;
-  cursor:pointer;
-  background:linear-gradient(135deg,#1e1e1e,#2c2c2c);
-  color:white;
-  letter-spacing:0.4px;
-  transition:0.25s ease;
-  box-shadow:0 0 10px rgba(255,255,255,0.12);
+  border:none;border-radius:12px;padding:8px 14px;font-size:0.95rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#1e1e1e,#2c2c2c);color:white;letter-spacing:0.4px;transition:0.2s ease;box-shadow:0 0 10px rgba(255,255,255,0.08);
 }
 
-/* 赤警告時全体赤発光 */
-.red-alert button,
-.red-alert .glow-btn,
-.red-alert #alertToggle,
-.red-alert .submitBtn{
-  background:linear-gradient(135deg,#4d0000,#7a0000) !important;
-  box-shadow:0 0 14px red !important;
+/* 赤警告時 */
+.red-alert button, .red-alert .submitBtn{
+  background:linear-gradient(135deg,#4d0000,#7a0000) !important;box-shadow:0 0 14px red !important;
 }
 
-/* その他 */
+/* extra */
 .back-btn{display:inline-block;margin-top:12px;background:#444;padding:8px 12px;border-radius:8px;text-decoration:none;color:white;}
 .plans-extra{margin-top:20px;display:grid;grid-template-columns:1fr;gap:10px;}
 @media(min-width:900px){.plans-extra{grid-template-columns:repeat(2,1fr);}}
@@ -126,7 +124,28 @@ button, .glow-btn, #alertToggle, .submitBtn{
 
 <section class="plans" id="planSection">
   <h2>おすすめ在宅プラン（計 12 プラン）</h2>
-  <div class="plan-list" id="planList"></div>
+
+  <div class="controls" aria-hidden="false" style="margin-top:8px;">
+    <input id="searchInput" type="search" placeholder="検索（例：Netflix、布団、温泉）" style="min-width:180px;">
+    <select id="filterCategory">
+      <option value="all">カテゴリ: すべて</option>
+      <option value="relax">癒し系</option>
+      <option value="comfy">省エネ系</option>
+      <option value="wild">妄想系</option>
+      <option value="fun">おふざけ系</option>
+    </select>
+    <select id="sortSelect">
+      <option value="default">並べ替え: 推奨順</option>
+      <option value="price-asc">価格: 安い順</option>
+      <option value="price-desc">価格: 高い順</option>
+      <option value="name-asc">名前: A→Z</option>
+      <option value="name-desc">名前: Z→A</option>
+      <option value="random">ランダム</option>
+    </select>
+    <button id="clearFilters" style="background:#333;color:white;padding:8px 10px;border-radius:8px;">フィルタ解除</button>
+  </div>
+
+  <div class="plan-list" id="planList" aria-live="polite"></div>
 </section>
 
 <section id="favoritePage">
@@ -158,85 +177,124 @@ button, .glow-btn, #alertToggle, .submitBtn{
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <div id="errorBox" role="alert"></div>
-  <div id="successBox" class="success" role="status"></div>
+  <div id="errorBox" role="alert" aria-live="assertive"></div>
+  <div id="successBox" class="success" role="status" aria-live="polite"></div>
   <div id="confetti" class="confetti" aria-hidden="true"></div>
 </section>
 
-<footer style="margin-top:40px;text-align:center;opacity:0.6;">© 2025 StayHomeTours</footer>
+<footer style="margin-top:24px;text-align:center;opacity:0.6;">© 2025 StayHomeTours</footer>
 </div>
+
+<!-- 花火キャンバス（フルスクリーン） -->
+<canvas id="fireworksCanvas"></canvas>
 
 <script>
 /* ----------------------------
-   基本 UI / プラン / お気に入り
+   データ・UI 初期化（カテゴリ・価格数値）
    ---------------------------- */
-const planData=[
-  {title:"引きこもり満喫パック",price:"¥1,980",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
-  {title:"布団縛りツアー",price:"¥980",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
-  {title:"スマホ世界一周プラン",price:"¥2,480",img:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d",desc:"世界の景色は親指が決める。"},
-  {title:"Netflix耐久旅",price:"¥1,500",img:"https://images.unsplash.com/photo-1524985069026-dd778a71c7b4",desc:"12時間視聴で脳内世界旅行。"},
-  {title:"自室秘境トレッキング",price:"¥1,100",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",desc:"部屋の隅を未踏の大地に。"},
-  {title:"ベッド沈没リゾート",price:"¥2,000",img:"https://images.unsplash.com/photo-1520880867055-1e30d1cb001c",desc:"ベッドで沈む贅沢。"},
-  {title:"無音瞑想ステイ",price:"¥980",img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b",desc:"雑音ゼロの心旅。"},
-  {title:"カーテン大陸探検",price:"¥750",img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e",desc:"光と影の世界。"},
-  {title:"深夜テンション海外旅",price:"¥1,600",img:"https://www.nightview.info/photo/spot/0261/0261_04_main.jpg",desc:"夜の妄想で世界横断。"},
-  {title:"家電サファリツアー",price:"¥1,300",img:"https://images.unsplash.com/photo-1481277542470-605612bd2d61",desc:"家電を動物に見立てて冒険。"},
-  {title:"ゴロゴロ温泉ごっこ",price:"¥900",img:"https://images.unsplash.com/photo-1519824145371-296894a0daa9",desc:"布団の中で温泉気分。"},
-  {title:"幻のバーチャル外国語旅",price:"¥2,800",img:"https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64",desc:"外国語アプリで無限旅行。"},
+const planData = [
+  {id:0,title:"引きこもり満喫パック",priceText:"¥1,980",price:1980,category:"relax",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
+  {id:1,title:"布団縛りツアー",priceText:"¥980",price:980,category:"comfy",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
+  {id:2,title:"スマホ世界一周プラン",priceText:"¥2,480",price:2480,category:"wild",img:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d",desc:"世界の景色は親指が決める。"},
+  {id:3,title:"Netflix耐久旅",priceText:"¥1,500",price:1500,category:"fun",img:"https://images.unsplash.com/photo-1524985069026-dd778a71c7b4",desc:"12時間視聴で脳内世界旅行。"},
+  {id:4,title:"自室秘境トレッキング",priceText:"¥1,100",price:1100,category:"wild",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",desc:"部屋の隅を未踏の大地に。"},
+  {id:5,title:"ベッド沈没リゾート",priceText:"¥2,000",price:2000,category:"comfy",img:"https://images.unsplash.com/photo-1520880867055-1e30d1cb001c",desc:"ベッドで沈む贅沢。"},
+  {id:6,title:"無音瞑想ステイ",priceText:"¥980",price:980,category:"relax",img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b",desc:"雑音ゼロの心旅。"},
+  {id:7,title:"カーテン大陸探検",priceText:"¥750",price:750,category:"wild",img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e",desc:"光と影の世界。"},
+  {id:8,title:"深夜テンション海外旅",priceText:"¥1,600",price:1600,category:"fun",img:"https://www.nightview.info/photo/spot/0261/0261_04_main.jpg",desc:"夜の妄想で世界横断。"},
+  {id:9,title:"家電サファリツアー",priceText:"¥1,300",price:1300,category:"fun",img:"https://images.unsplash.com/photo-1481277542470-605612bd2d61",desc:"家電を動物に見立てて冒険。"},
+  {id:10,title:"ゴロゴロ温泉ごっこ",priceText:"¥900",price:900,category:"relax",img:"https://images.unsplash.com/photo-1519824145371-296894a0daa9",desc:"布団の中で温泉気分。"},
+  {id:11,title:"幻のバーチャル外国語旅",priceText:"¥2,800",price:2800,category:"wild",img:"https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64",desc:"外国語アプリで無限旅行。"}
 ];
 
-const planList = document.getElementById('planList');
-const favoriteList = document.getElementById('favoriteList');
+const planListEl = document.getElementById('planList');
+const favoriteListEl = document.getElementById('favoriteList');
 const goFavoriteBtn = document.getElementById('goFavorite');
 const backToMain = document.getElementById('backToMain');
 const planSection = document.getElementById('planSection');
 const favoritePage = document.getElementById('favoritePage');
-let favorites = JSON.parse(localStorage.getItem('sht_favorites')||'[]');
 
-/* render plans */
+let favorites = JSON.parse(localStorage.getItem('sht_favorites')||'[]');
+let currentFilter = 'all';
+let currentSort = 'default';
+let currentSearch = '';
+
+/* render with filter/search/sort */
+function getFilteredSortedData(){
+  let arr = planData.slice();
+
+  // filter
+  if(currentFilter !== 'all'){
+    arr = arr.filter(p=>p.category === currentFilter);
+  }
+
+  // search (title + desc)
+  if(currentSearch.trim()!==''){
+    const q = currentSearch.trim().toLowerCase();
+    arr = arr.filter(p => (p.title + ' ' + p.desc + ' ' + p.priceText).toLowerCase().includes(q));
+  }
+
+  // sort
+  switch(currentSort){
+    case 'price-asc': arr.sort((a,b)=>a.price-b.price); break;
+    case 'price-desc': arr.sort((a,b)=>b.price-a.price); break;
+    case 'name-asc': arr.sort((a,b)=>a.title.localeCompare(b.title)); break;
+    case 'name-desc': arr.sort((a,b)=>b.title.localeCompare(a.title)).reverse(); break;
+    case 'random': arr.sort(()=>Math.random()-0.5); break;
+    default: /* keep original order */ break;
+  }
+  return arr;
+}
+
 function renderPlans(){
-  planList.innerHTML='';
-  planData.forEach((p,i)=>{
+  const data = getFilteredSortedData();
+  planListEl.innerHTML = '';
+  if(data.length === 0){
+    planListEl.innerHTML = '<p style="opacity:0.7;padding:16px;text-align:center;">一致するプランがありません。</p>';
+    return;
+  }
+  data.forEach(p=>{
     const card = document.createElement('div');
-    card.className='plan-card';
-    const active = favorites.includes(String(i)) ? 'active' : '';
+    card.className = 'plan-card';
+    const active = favorites.includes(String(p.id)) ? 'active' : '';
     card.innerHTML = `
-      <button class="favorite-btn ${active}" data-id="${i}" aria-label="お気に入り">${active?'★':'☆'}</button>
+      <button class="favorite-btn ${active}" data-id="${p.id}" aria-label="お気に入り">${active? '★':'☆'}</button>
       <img src="${p.img}" alt="${p.title}">
       <h3>${p.title}</h3>
-      <div class="price">${p.price}</div>
+      <div class="price">${p.priceText}</div>
       <p style="opacity:0.85">${p.desc}</p>
     `;
-    planList.appendChild(card);
+    planListEl.appendChild(card);
   });
 }
 renderPlans();
 
 function renderFavorites(){
-  favoriteList.innerHTML='';
-  if(favorites.length===0){
-    favoriteList.innerHTML = '<p style="opacity:0.7;text-align:center;padding:18px;">お気に入りはまだありません。</p>';
+  favoriteListEl.innerHTML = '';
+  if(favorites.length === 0){
+    favoriteListEl.innerHTML = '<p style="opacity:0.7;text-align:center;padding:18px;">お気に入りはまだありません。</p>';
     return;
   }
   favorites.forEach(id=>{
-    const p = planData[id];
+    const p = planData.find(x=>x.id === Number(id));
+    if(!p) return;
     const c = document.createElement('div');
-    c.className='plan-card';
-    c.innerHTML = `<img src="${p.img}" alt="${p.title}"><h3>${p.title}</h3><div class="price">${p.price}</div><p style="opacity:0.85">${p.desc}</p>`;
-    favoriteList.appendChild(c);
+    c.className = 'plan-card';
+    c.innerHTML = `<img src="${p.img}" alt="${p.title}"><h3>${p.title}</h3><div class="price">${p.priceText}</div><p style="opacity:0.85">${p.desc}</p>`;
+    favoriteListEl.appendChild(c);
   });
 }
 
-/* favorites click (delegation) */
+/* favorite click delegation */
 document.addEventListener('click', (e) => {
   if(e.target.classList.contains('favorite-btn')){
-    const id = e.target.dataset.id;
-    if(!favorites.includes(String(id))){
-      favorites.push(String(id));
+    const id = String(e.target.dataset.id);
+    if(!favorites.includes(id)){
+      favorites.push(id);
       e.target.classList.add('active');
       e.target.textContent = '★';
     } else {
-      favorites = favorites.filter(f=>f!==String(id));
+      favorites = favorites.filter(f=>f!==id);
       e.target.classList.remove('active');
       e.target.textContent = '☆';
     }
@@ -245,7 +303,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* show favorites / back */
+/* favorite view toggle */
 goFavoriteBtn.addEventListener('click', ()=> {
   planSection.style.display='none';
   favoritePage.style.display='block';
@@ -253,6 +311,17 @@ goFavoriteBtn.addEventListener('click', ()=> {
   renderFavorites();
 });
 backToMain.addEventListener('click', (e)=>{ e.preventDefault(); planSection.style.display='block'; favoritePage.style.display='none'; backToMain.style.display='none'; });
+
+/* controls: search/filter/sort */
+const searchInput = document.getElementById('searchInput');
+const filterCategory = document.getElementById('filterCategory');
+const sortSelect = document.getElementById('sortSelect');
+const clearFiltersBtn = document.getElementById('clearFilters');
+
+searchInput.addEventListener('input', (e)=>{ currentSearch = e.target.value; renderPlans(); });
+filterCategory.addEventListener('change', (e)=>{ currentFilter = e.target.value; renderPlans(); });
+sortSelect.addEventListener('change', (e)=>{ currentSort = e.target.value; renderPlans(); });
+clearFiltersBtn.addEventListener('click', ()=>{ currentFilter='all'; currentSort='default'; currentSearch=''; searchInput.value=''; filterCategory.value='all'; sortSelect.value='default'; renderPlans(); });
 
 /* ----------------------------
    予約フォーム強化（検証・送信演出・35%確率）
@@ -277,20 +346,14 @@ const errorReasons = [
   "電子の流れが逆走しました。","未知のエラーが未知のままです。"
 ];
 
-/* helper: simple validations */
-function isEmail(v){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-}
-function isPhone(v){
-  if(!v) return true; // optional
-  return /^[0-9+\-\s()]{6,20}$/.test(v);
-}
+/* simple validators */
+function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function isPhone(v){ if(!v) return true; return /^[0-9+\-\s()]{6,20}$/.test(v); }
 
-/* visual effects */
+/* error visual: flash + vibrate */
 function screenFlash(){
   const flash = document.createElement('div');
-  flash.style.position='fixed';
-  flash.style.top=0; flash.style.left=0;
+  flash.style.position='fixed'; flash.style.top=0; flash.style.left=0;
   flash.style.width='100%'; flash.style.height='100%';
   flash.style.background='rgba(255,0,0,0.28)';
   flash.style.zIndex=9999; flash.style.pointerEvents='none';
@@ -298,156 +361,105 @@ function screenFlash(){
   document.body.appendChild(flash);
   setTimeout(()=>flash.remove(),380);
 }
-function shakeError(){
-  errorBox.style.animation = 'shake 0.6s';
-  setTimeout(()=>errorBox.style.animation = '',700);
+function vibrateError(){
+  errorBox.style.animation = 'vibrate 0.6s';
+  setTimeout(()=> errorBox.style.animation = '',700);
 }
 
-/* confetti: simple DOM particles */
-function launchConfetti(count=30){
-  confettiRoot.innerHTML = '';
+/* confetti simple */
+function launchConfetti(count=24){
+  confettiRoot.innerHTML='';
+  const colors = ['#ffd166','#ef476f','#06d6a0','#118ab2','#a7c957'];
   for(let i=0;i<count;i++){
     const el = document.createElement('div');
+    const w = 6 + Math.random()*10;
     el.style.position='absolute';
-    el.style.width = (6 + Math.random()*10)+'px';
-    el.style.height = (8 + Math.random()*12)+'px';
-    el.style.left = (Math.random()*100)+'%';
-    el.style.top = '-10px';
-    el.style.opacity = 0.95;
-    el.style.transform = 'rotate('+Math.random()*360+'deg)';
-    el.style.background = ['#ffd166','#ef476f','#06d6a0','#118ab2','#a7c957'][Math.floor(Math.random()*5)];
+    el.style.width = w + 'px';
+    el.style.height = (w*1.3)+'px';
+    el.style.left = (40 + Math.random()*20) + '%';
+    el.style.top = '10%';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.opacity = '0.95';
     el.style.borderRadius = '2px';
-    el.style.zIndex = 10001;
-    el.style.transition = 'transform 2.2s linear, top 2.2s linear, opacity 0.5s linear';
+    el.style.transform = 'translateY(-20px)';
+    el.style.transition = `transform ${1.8+Math.random()}s cubic-bezier(.2,.8,.2,1), left ${1.8+Math.random()}s linear, opacity 0.6s ease ${1.2+Math.random()}s`;
     confettiRoot.appendChild(el);
-    // animate
     setTimeout(()=> {
-      el.style.top = (60 + Math.random()*80)+'vh';
-      el.style.left = (Math.random()*100)+'%';
-      el.style.transform = 'rotate('+ (360 + Math.random()*720) +'deg) translateY(20px)';
-      el.style.opacity = 0.95;
-    }, 20 + Math.random()*180);
-    // fade
-    setTimeout(()=>{ el.style.opacity = '0'; }, 2000 + Math.random()*800);
-    setTimeout(()=>{ try{ el.remove(); }catch(e){} }, 3000 + Math.random()*800);
+      el.style.transform = `translateY(${70 + Math.random()*30}vh)`;
+      el.style.left = (10 + Math.random()*80) + '%';
+    }, 50 + Math.random()*300);
+    setTimeout(()=> el.style.opacity = '0', 1600 + Math.random()*600);
+    setTimeout(()=> { try{ el.remove(); }catch(e){} }, 3000);
   }
 }
 
-/* success UI */
-function showSuccess(name){
-  progressArea.style.display='none';
-  successBox.style.display='block';
-  successBox.textContent = `✔ 送信が完了しました！ ${name||''} さん、ステイホームツアーズへようこそ。`;
-  launchConfetti(36);
-  setTimeout(()=>{ successBox.style.display='none'; }, 5500);
+/* fireworks system (canvas) */
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
+let cw, ch, fireworksRunning=false, fwAnimId=null;
+function resizeCanvas(){
+  cw = canvas.width = window.innerWidth;
+  ch = canvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-/* reset states */
-function resetProgress(){
-  bar.style.width='0%';
-  progressArea.style.display='none';
-}
-
-/* main submit flow */
-form.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  // hide previous
-  errorBox.style.display='none';
-  successBox.style.display='none';
-
-  // read values and validate
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const tel = document.getElementById('tel').value.trim();
-  const place = document.getElementById('place').value.trim();
-  const level = document.getElementById('level').value;
-
-  if(!name || !email || !place || level===''){
-    errorBox.textContent = '⚠ 必須項目をすべて入力してください（名前・メール・場所・行きたい度）。';
-    errorBox.style.display='block';
-    shakeError();
-    return;
+/* particle classes */
+class Firework {
+  constructor(x, y, targetX, targetY, hue){
+    this.x = x; this.y = y; this.sx = x; this.sy = y;
+    this.tx = targetX; this.ty = targetY;
+    this.hue = hue;
+    this.distanceToTarget = Math.hypot(targetX-x, targetY-y);
+    this.traveled = 0;
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while(this.coordinateCount--) this.coordinates.push([this.x, this.y]);
+    this.speed = 4 + Math.random()*2.5;
+    this.angle = Math.atan2(targetY - y, targetX - x);
+    this.acceleration = 1.02;
+    this.brightness = 50 + Math.random()*30;
   }
-  if(!isEmail(email)){
-    errorBox.textContent = '⚠ メールアドレスの形式が正しくありません。';
-    errorBox.style.display='block';
-    shakeError();
-    return;
-  }
-  if(!isPhone(tel)){
-    errorBox.textContent = '⚠ 電話番号の形式が正しくありません（半角数字＋記号で6〜20文字）。';
-    errorBox.style.display='block';
-    shakeError();
-    return;
-  }
-
-  // start progress
-  progressArea.style.display='block';
-  bar.style.width='0%';
-  let p = 0;
-
-  const timer = setInterval(()=>{
-    p += 5 + Math.floor(Math.random()*6 - 2); // 少しランダムに進む
-    if(p<0) p=0;
-    if(p>100) p=100;
-    bar.style.width = p + '%';
-
-    // when hitting 35% threshold do a probabilistic error (35% or 70% when red-alert)
-    if(p >= 35 && p < 35+8){ // trigger once around 35
-      const isAlert = document.body.classList.contains('red-alert');
-      const errorChance = isAlert ? 0.70 : 0.35; // red mode doubles chance
-
-      if(Math.random() < errorChance){
-        clearInterval(timer);
-        const reason = errorReasons[Math.floor(Math.random()*errorReasons.length)];
-        errorBox.textContent = '⚠ エラー: '+reason;
-        errorBox.style.display='block';
-        // visual
-        if(isAlert) screenFlash();
-        shakeError();
-        // stop progress and reset after a moment so user can retry
-        setTimeout(()=>{ resetProgress(); }, 1600);
-        return;
-      }
+  update(index, arr){
+    this.coordinates.pop();
+    this.coordinates.unshift([this.x, this.y]);
+    const vx = Math.cos(this.angle) * this.speed;
+    const vy = Math.sin(this.angle) * this.speed;
+    this.x += vx;
+    this.y += vy;
+    this.traveled += Math.hypot(vx, vy);
+    this.speed *= this.acceleration;
+    // reached
+    if(this.traveled >= this.distanceToTarget){
+      // create particles
+      createParticles(this.tx, this.ty, this.hue);
+      arr.splice(index, 1);
     }
-
-    // success finish
-    if(p >= 100){
-      clearInterval(timer);
-      showSuccess(name);
-      // optionally: clear form
-      form.reset();
-      setTimeout(()=>{ resetProgress(); }, 1200);
-    }
-
-  }, 140);
-});
-
-/* initialize progress bar wave */
-bar.style.backgroundSize = '200% 100%';
-bar.style.animation = 'wave 1.2s linear infinite';
-
-/* 赤警告 toggle */
-const alertBtn = document.getElementById('alertToggle');
-alertBtn.addEventListener('click', ()=>{
-  document.body.classList.toggle('red-alert');
-  alertBtn.textContent = document.body.classList.contains('red-alert') ? '🔴 赤警告モード解除' : '🔴 赤警告モード';
-});
-
-/* initialize favorites UI states (sync buttons) */
-renderPlans();
-
-/* accessibility: allow clearing favorites via longpress? Not necessary, but add simple double-click on goFavorite to clear */
-goFavoriteBtn.addEventListener('dblclick', ()=>{
-  if(confirm('お気に入りを全部クリアしますか？')){
-    favorites = [];
-    localStorage.setItem('sht_favorites', JSON.stringify(favorites));
-    renderPlans();
-    renderFavorites();
-    alert('お気に入りをすべてクリアしました。');
   }
-});
+  draw(){
+    ctx.beginPath();
+    ctx.moveTo(this.coordinates[this.coordinates.length-1][0], this.coordinates[this.coordinates.length-1][1]);
+    ctx.lineTo(this.x, this.y);
+    ctx.strokeStyle = 'hsl(' + this.hue + ', 100%, ' + this.brightness + '%)';
+    ctx.stroke();
+  }
+}
 
-</script>
-</body>
-</html>
+class Particle {
+  constructor(x, y, hue){
+    this.x = x; this.y = y;
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while(this.coordinateCount--) this.coordinates.push([this.x, this.y]);
+    this.angle = Math.random()*Math.PI*2;
+    this.speed = Math.random()*6 + 2;
+    this.friction = 0.95;
+    this.gravity = 0.06;
+    this.hue = hue;
+    this.brightness = 60 + Math.random()*20;
+    this.alpha = 1;
+    this.decay = 0.015 + Math.random()*0.02;
+  }
+  update(index, arr){
+    this.coordinates.pop();
+   
