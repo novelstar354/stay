@@ -193,10 +193,12 @@ button:active::after {
 const alertBtn=document.getElementById("alertToggle");
 alertBtn.addEventListener("click",()=>{
   document.body.classList.toggle("red-alert");
-  alertBtn.textContent=document.body.classList.contains("red-alert")?"🔴 赤警告モード解除":"🔴 赤警告モード";
+  alertBtn.textContent=document.body.classList.contains("red-alert")
+  ? "🔴 赤警告モード解除"
+  : "🔴 赤警告モード";
 });
 
-/* プラン生成 12個 */
+/* プラン生成 */
 const planData=[
   {title:"引きこもり満喫パック",price:"¥1,980",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
   {title:"布団縛りツアー",price:"¥980",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
@@ -234,7 +236,7 @@ function renderPlans(){
 
 renderPlans();
 
-/* お気に入り機能 */
+/* お気に入り */
 document.addEventListener("click",e=>{
   if(e.target.classList.contains("favorite-btn")){
     const id=e.target.dataset.id;
@@ -260,49 +262,96 @@ function renderFavorites(){
   });
 }
 
-/* 予約フォーム */
+/* ---------------------------
+    予約フォーム強化版
+---------------------------- */
 const form=document.getElementById("reserveForm");
 const progressArea=document.getElementById("progressArea");
 const bar=document.getElementById("progressBar");
 const errorBox=document.getElementById("errorBox");
 
+/* エラー理由 30個に増量 */
 const errorReasons=[
-  "サーバーが寝落ちしました。",
-  "通信ケーブルが布団に包まれています。",
-  "送信ボタンが押されたことに気づいていません。",
-  "データが迷子になりました。",
-  "AIが散歩に行きました。",
-  "パケットが渋滞中です。",
-  "送信者の気配を感じ取れません。",
-  "回線がスヤスヤしています。",
-  "電波がコタツに引きこもりました。",
-  "処理担当がコーヒー休憩中です。",
-  "世界線がズレました。",
-  "データが寝返りを打ち損ねました。"
+  "サーバーが寝落ちしました。","通信ケーブルが布団に包まれています。","送信ボタンが押されたことに気づいていません。",
+  "データが迷子になりました。","AIが散歩に行きました。","パケットが渋滞中です。","送信者の気配を感じ取れません。",
+  "回線がスヤスヤしています。","電波がコタツに引きこもりました。","処理担当がコーヒー休憩中です。",
+  "世界線がズレました。","データが寝返りを打ち損ねました。","衛星がくしゃみしました。",
+  "インターネットが反抗期です。","サーバーが今日だけ引きこもりモードです。","謎の時空のゆがみが発生。",
+  "通信妖精がストライキ中。","AIのやる気ゲージが0です。","ルーターがスピンしています。",
+  "データが寄り道しています。","送信ホルモンが不足しています。","暗号化の呪文が乱れました。",
+  "通信トンネルに落とし穴があります。","データが昼寝中です。","宇宙線が邪魔をしました。",
+  "ネットワークの機嫌が悪いです。","送信資格試験に落ちました。","回線が夢を見ています。",
+  "電子の流れが逆走しました。","未知のエラーが未知のままです。"
 ];
+
+/* 画面赤フラッシュ */
+function screenFlash(){
+  const flash=document.createElement("div");
+  flash.style.position="fixed";
+  flash.style.top=0;
+  flash.style.left=0;
+  flash.style.width="100%";
+  flash.style.height="100%";
+  flash.style.background="rgba(255,0,0,0.35)";
+  flash.style.zIndex=9999;
+  flash.style.pointerEvents="none";
+  flash.style.animation="flash .35s ease-out";
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),400);
+}
+
+/* 成功メッセージ */
+function showSuccess(){
+  errorBox.style.display="block";
+  errorBox.style.background="#0a3";
+  errorBox.style.borderLeft="6px solid #2f6";
+  errorBox.textContent="✔ 送信が完了しました！ ステイホームツアーズへようこそ。";
+}
+
+/* 送信風アニメ波 */
+bar.style.background="linear-gradient(90deg,#00b7ff,#44e0ff,#00b7ff)";
+bar.style.backgroundSize="200% 100%";
+bar.style.animation="wave 1.2s linear infinite";
 
 form.addEventListener("submit",e=>{
   e.preventDefault();
   errorBox.style.display="none";
+  errorBox.style.background="#400";
   progressArea.style.display="block";
   bar.style.width="0%";
 
   let p=0;
+
   const timer=setInterval(()=>{
+
     p+=5;
     bar.style.width=p+"%";
 
+    /* 35% の地点で確率判定 */
     if(p===35){
-      clearInterval(timer);
-      const reason=errorReasons[Math.floor(Math.random()*errorReasons.length)];
-      errorBox.textContent="⚠ エラー: "+reason;
-      errorBox.style.display="block";
-      if(document.body.classList.contains("red-alert")){
-        errorBox.style.boxShadow="0 0 20px red";
+
+      const isAlert=document.body.classList.contains("red-alert");
+      const errorChance=isAlert ? 0.70 : 0.35;
+
+      if(Math.random() < errorChance){
+        clearInterval(timer);
+
+        const reason=errorReasons[Math.floor(Math.random()*errorReasons.length)];
+        errorBox.textContent="⚠ エラー: "+reason;
+        errorBox.style.display="block";
+
+        screenFlash(); // 赤フラッシュ
+
+        return; // 送信停止
       }
     }
 
-    if(p>=100){clearInterval(timer);}
+    /* 成功ルート */
+    if(p>=100){
+      clearInterval(timer);
+      showSuccess();
+    }
+
   },150);
 });
 </script>
