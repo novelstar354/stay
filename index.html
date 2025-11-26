@@ -1,360 +1,314 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ステイホームツアーズ — 旅行をやめて幸せに帰ろう</title>
-  <meta name="description" content="旅行を予約したらキャンセルして家にいることをおすすめする、ちょっとユーモアのある旅行代理店サイトです。StayHome Toursは“安全・安心・快適なステイ”を推奨します。" />
-  <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --accent:#3ddc84; --muted:#9aa6b2; --glass: rgba(255,255,255,0.03);
-      --maxw:1100px;
-      --radius:14px;
-      font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    html,body{height:100%;}
-    body{margin:0;background:linear-gradient(180deg,#07101a 0%, #071622 60%);color:#e6eef6;display:flex;justify-content:center;padding:36px 20px;}
-    .wrap{width:100%;max-width:var(--maxw);}    
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ステイホームツアーズ — 旅行をやめて幸せに帰ろう（完全版）</title>
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Noto Sans JP",sans-serif;}
+body{background:#0b0b0b;color:white;overflow-x:hidden;}
+.wrapper{max-width:1200px;margin:0 auto;padding:0 20px;width:100%;}
 
-    header{display:flex;align-items:center;gap:18px;margin-bottom:28px}
-    .logo{display:flex;align-items:center;gap:12px}
-    .mark{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#79f7b0);display:flex;align-items:center;justify-content:center;color:#052024;font-weight:700;font-size:18px}
-    h1{margin:0;font-size:1.2rem}
-    nav{margin-left:auto}
-    nav a{color:var(--muted);text-decoration:none;margin-left:18px}
-    nav a.active{color:var(--accent);font-weight:700}
+/* HERO */
+.hero{text-align:center;padding:80px 0 60px;}
+.hero h1{font-size:2.4rem;font-weight:700;margin-bottom:20px;}
+.hero p{font-size:1.2rem;opacity:0.8;}
 
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-bottom:28px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(2,6,23,0.6);}
-    .hero h2{margin:0 0 8px 0;font-size:1.6rem}
-    .hero p{margin:0;color:var(--muted)}
+/* 赤警告ボタン */
+#alertToggle{margin-top:25px;padding:15px 35px;font-size:1.2rem;border:none;border-radius:50px;background:red;color:white;cursor:pointer;animation:glow 2s infinite;box-shadow:0 0 20px red;}
+@keyframes glow{0%{box-shadow:0 0 8px red;}50%{box-shadow:0 0 20px red;}100%{box-shadow:0 0 8px red;}}
 
-    .features{display:flex;gap:12px;margin:18px 0}
-    .feature{flex:1;padding:14px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-    .feature h4{margin:0 0 6px 0}
-    .feature p{margin:0;color:var(--muted);font-size:0.95rem}
+/* 赤警告モード */
+.red-alert{background:#2b0000!important;}
+.red-alert *{color:#ffb8b8!important;}
+.red-alert .pulsing{animation:pulse .6s infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
 
-    .booking{padding:20px}
-    label{display:block;font-size:0.9rem;margin:10px 0 6px}
-    input[type=text],input[type=email],input[type=date],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-    .row{display:flex;gap:12px}
-    .row > *{flex:1}
-    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#04241a;font-weight:700;border:none;cursor:pointer}
-    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(61,220,132,0.18)}
+/* PLANS */
+.plans{margin-top:60px;}
+.plans h2{text-align:center;font-size:1.9rem;margin-bottom:25px;}
+.plan-list{display:grid;grid-template-columns:1fr;gap:25px;}
+@media(min-width:800px){.plan-list{grid-template-columns:repeat(3,1fr);}}
+.plan-card{background:#131313;border-radius:15px;padding:20px;box-shadow:0 0 15px rgba(255,255,255,0.07);text-align:center;transition:.3s;position:relative;}
+.plan-card:hover{transform:translateY(-5px);box-shadow:0 0 25px rgba(255,255,255,0.12);} 
+.plan-card img{width:100%;height:170px;object-fit:cover;border-radius:12px;margin-bottom:15px;}
+.plan-card .price{font-size:1.5rem;margin:12px 0;color:#ffd166;}
+.favorite-btn{position:absolute;top:10px;right:10px;font-size:1.6rem;cursor:pointer; opacity:0.8;}
+.favorite-btn.active{color:#ff4d4d;opacity:1;}
 
-    footer{margin-top:28px;padding:18px;text-align:center;color:var(--muted);font-size:0.9rem}
+/* お気に入りページ */
+#favoritePage{display:none;padding:50px 0;}
+#favoritePage h2{text-align:center;margin-bottom:20px;}
+#favoriteList{display:grid;grid-template-columns:1fr;gap:20px;}
+@media(min-width:800px){#favoriteList{grid-template-columns:repeat(3,1fr);}}
 
-    /* モーダル */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(2,6,12,0.6),rgba(2,6,12,0.6));backdrop-filter:blur(4px)}
-    .modal .box{width:94%;max-width:680px;background:linear-gradient(180deg,#09131a,#051019);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-    .modal h3{margin-top:0}
-    .voucher{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:10px;margin-top:12px}
+/* FORM */
+.form-section{margin-top:70px;}
+form{display:flex;flex-direction:column;gap:18px;margin-top:20px;}
+input,select,textarea{padding:12px 15px;border:none;border-radius:10px;background:#222;color:white;font-size:1rem;}
+button.submitBtn{padding:15px;background:#00b7ff;border:none;border-radius:10px;color:black;font-size:1.2rem;cursor:pointer;transition:.2s;}
+button.submitBtn:hover{background:#4dd6ff;}
 
-    /* レスポンシブ */
-    @media(max-width:920px){
-      .hero{grid-template-columns:1fr}
-      nav{display:none}
-    }
-    #alt-stay{transition:opacity 0.4s ease, transform 0.4s ease;}
-  .fade-out{opacity:0; transform:translateY(-10px); pointer-events:none;}
-  /* glowing fixed close button */
-  .close-btn{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:transparent;
-    border:none;
-    color:#ff4d4d;
-    font-size:34px;
-    cursor:pointer;
-    line-height:1;
-    z-index:9999;
-    text-shadow:0 0 10px rgba(255,0,0,0.8), 0 0 20px rgba(255,0,0,0.6);
-    transition:transform .25s ease, text-shadow .25s ease;
-    animation:redPulse 1.8s infinite ease-in-out;
-  }
-  .close-btn:hover{
-    transform:scale(1.2) rotate(4deg);
-    text-shadow:0 0 15px rgba(255,0,0,1), 0 0 30px rgba(255,0,0,0.9);
-  }
-  @keyframes redPulse{
-    0%{ text-shadow:0 0 8px rgba(255,0,0,0.6), 0 0 18px rgba(255,0,0,0.4); }
-    50%{ text-shadow:0 0 16px rgba(255,0,0,1), 0 0 36px rgba(255,0,0,0.9); }
-    100%{ text-shadow:0 0 8px rgba(255,0,0,0.6), 0 0 18px rgba(255,0,0,0.4); }
-  }
-  .close-btn:hover{
-    transform:scale(1.15);
-    text-shadow:0 0 12px rgba(255,255,255,1), 0 0 22px rgba(255,255,255,0.9);
-  }
+/* 送信アニメーション */
+.progress-container{width:100%;background:#333;height:12px;border-radius:10px;margin-top:10px;overflow:hidden;display:none;}
+.progress-bar{height:100%;width:0%;background:#00b7ff;transition:0.2s;}
+
+/* エラー画面 */
+#errorBox{display:none;margin-top:25px;padding:20px;background:#400;border-left:6px solid red;border-radius:10px;}
+
+footer{margin:80px 0 40px;text-align:center;opacity:0.6;}
+
+.glow-btn{animation:glowbtn 1.8s infinite;box-shadow:0 0 10px #fff;}@keyframes glowbtn{0%{box-shadow:0 0 6px #fff;}50%{box-shadow:0 0 18px #fff;}100%{box-shadow:0 0 6px #fff;}}
+.red-alert .glow-btn{animation:redglow 1.2s infinite;box-shadow:0 0 12px red !important;}@keyframes redglow{0%{box-shadow:0 0 6px red;}50%{box-shadow:0 0 22px red;}100%{box-shadow:0 0 6px red;}}
+/* ---- 全ボタン共通のかっこいいデザイン ---- */
+button, .glow-btn, #alertToggle, .submitBtn{
+  border:none;
+  border-radius:14px;
+  padding:14px 28px;
+  font-size:1.1rem;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,#1e1e1e,#2c2c2c);
+  color:white;
+  letter-spacing:0.5px;
+  transition:0.25s ease;
+  box-shadow:0 0 10px rgba(255,255,255,0.25);
+  animation:allglow 2.2s infinite;
+}
+button:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 0 18px rgba(255,255,255,0.45);
+}
+@keyframes allglow{
+  0%{ box-shadow:0 0 6px rgba(255,255,255,0.35); }
+  50%{ box-shadow:0 0 22px rgba(255,255,255,0.7); }
+  100%{ box-shadow:0 0 6px rgba(255,255,255,0.35); }
+}
+
+/* ---- 赤警告モード時の赤い発光 ---- */
+.red-alert button,
+.red-alert .glow-btn,
+.red-alert #alertToggle,
+.red-alert .submitBtn{
+  background:linear-gradient(135deg,#4d0000,#7a0000) !important;
+  animation:redallglow 1.4s infinite !important;
+  box-shadow:0 0 14px red !important;
+}
+@keyframes redallglow{
+  0%{ box-shadow:0 0 8px rgba(255,0,0,0.5); }
+  50%{ box-shadow:0 0 26px rgba(255,0,0,1); }
+  100%{ box-shadow:0 0 8px rgba(255,0,0,0.5); }
+}
+/* 衝撃波エフェクト */
+.button, .glow-btn, button {
+  position: relative;
+  overflow: hidden;
+}
+.button:active::after,
+.glow-btn:active::after,
+button:active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation: shockwave 0.6s ease-out;
+}
+@keyframes shockwave {
+  0% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(18); }
+}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">
-        <div class="mark">SH</div>
-        <div>
-          <h1>ステイホームツアーズ</h1>
-          <div style="font-size:0.9rem;color:var(--muted)">旅行をキャンセルして、家で最高の時間を作るお手伝い</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#home" class="active" onclick="showSection('home');return false">ホーム</a>
-        <a href="#book" onclick="showSection('book');return false">予約する</a>
-        <a href="#about" onclick="showSection('about');return false">私たちについて</a>
-      </nav>
-    </header>
+<div class="wrapper">
 
-    <main>
-      <section id="home" class="card">
-        <div class="hero">
-          <div>
-            <h2>そのフライト、本当に行きますか？</h2>
-            <p>ステイホームツアーズは“キャンセル推奨”を専門にする、世界で唯一かもしれない旅行代理店です。旅行の不安、費用、混雑、天候…理由はいろいろ。私たちと一緒に、家で最高のプランを作りましょう。</p>
+<section class="hero pulsing">
+  <h1>ステイホームツアーズ</h1>
+  <p>旅行しないという最高の贅沢。あなたの家が、今日から世界最高の観光地に。</p>
+  <button id="alertToggle">🔴 赤警告モード</button>
+  <br>
+  <button id="goFavorite" style="margin-top:20px;padding:10px 25px;font-size:1rem;border-radius:10px;border:none;cursor:pointer;background:#ffaa00;color:black;">⭐ お気に入りを見る</button>
+  <a href="#" id="backToMain" class="glow-btn" style="display:inline-block;margin-bottom:20px;padding:10px 20px;background:#444;border-radius:10px;color:white;text-decoration:none;">← 元のページへ戻る</a>
+</section>
 
-            <div class="features">
-              <div class="feature">
-                <h4>手続きを簡単に</h4>
-                <p>航空券やホテルのキャンセル手順を代行・テンプレート化。面倒な手続きを丸投げできます。</p>
-              </div>
-              <div class="feature">
-                <h4>ステイプラン提案</h4>
-                <p>自宅で楽しめる映画・料理・ミニ旅行（仮想）をプロデュースします。</p>
-              </div>
-              <div class="feature">
-                <h4>安心の返金支援</h4>
-                <p>返金ポリシーの交渉サポートや保険相談も対応可能です（提携パートナーあり）。</p>
-              </div>
-            </div>
+<section class="plans" id="planSection">
+  <h2>おすすめ在宅プラン（計 12 プラン）</h2>
+  <div class="plan-list" id="planList"></div>
+</section>
 
-            <p style="margin-top:14px"><button class="btn" onclick="showSection('book')">まずは予約をキャンセルする</button>　<a class="btn ghost" href="cancel_tips.pdf" target="_blank" download>キャンセルのコツ（PDF）</a> <!-- 注意: ホスティングする際は cancel_tips.pdf を同フォルダに置いてください --></p>
-          </div>
+<section id="favoritePage">
+  <h2>お気に入り一覧</h2>
+  <div id="favoriteList"></div>
+</section>
 
-          <aside class="card" style="padding:18px">
-            <h3 style="margin:0 0 8px 0">今週のおすすめ：家でできる3つのミニ体験</h3>
-            <ol style="margin:8px 0 0 18px;color:var(--muted)">
-              <li>ホームシネマ夜 — プロジェクターを借りて感動を再現</li>
-              <li>世界の朝ごはん体験 — 各国のレシピキットをお届け</li>
-              <li>バーチャル美術館ツアー — 個別ガイド付きストリーミング</li>
-            </ol>
-            <p style="margin-top:12px;color:var(--muted)">ヒント：行きたい度が低ければ低いほど、私たちの出番です。</p>
-          </aside>
-        </div>
-      </section>
+<section class="form-section">
+  <h2>予約フォーム</h2>
 
-      <section id="book" class="card booking" style="margin-top:18px;display:none">
-        <h2>予約（キャンセル）フォーム</h2>
-        <p style="margin:6px 0;color:var(--muted)">予約を入力すると、私たちがあなたの代わりに“キャンセルをおすすめする”ための手続き案内と、ステイプランを提案します。</p>
+  <form id="reserveForm">
+    <input type="text" name="name" placeholder="名前" required>
+    <input type="email" name="email" placeholder="メールアドレス" required>
+    <input type="text" name="tel" placeholder="電話番号（任意）">
+    <input type="text" name="place" placeholder="行きたい場所（家の中でもOK）" required>
 
-        <form id="bookingForm" action="https://script.google.com/a/macros/hongo.ed.jp/s/AKfycbxap1qhy0hri-WMAXepdcvJ5O3uo79kEZMtKmykADyeu535ZH5FtEDKBKaeIk41nHUS0A/exec" method="POST" onsubmit="handleSubmit(event)">
-          <div class="row">
-            <div>
-              <label>電話番号</label>
-              <input type="text" id="phone" placeholder="090-xxxx-xxxx">
-            </div>
-            <div>
-              <label>お名前</label>
-              <input type="text" id="name" required placeholder="例：山田 太郎">
-            </div>
-            <div>
-              <label>メール</label>
-              <input type="email" id="email" required placeholder="example@mail.com">
-            </div>
-          </div>
+    <select name="level" required>
+      <option value="">行きたい度</option>
+      <option value="0">0（行かない）</option>
+      <option value="1">1（まあ行かない）</option>
+      <option value="2">2（やっぱ行かない）</option>
+      <option value="3">3（絶対行かない）</option>
+    </select>
 
-          <label>旅行予定日</label>
-          <input type="date" id="date">
+    <button class="submitBtn" type="submit">送信</button>
+  </form>
 
-          <label>行き先</label>
-          <input type="text" id="destination" placeholder="例：バンコク、パリ、沖縄">
-
-          <label>行きたい度（本心）: <span id="desireVal">5</span>/10</label>
-          <input type="range" id="desire" min="0" max="10" value="5" oninput="document.getElementById('desireVal').textContent=this.value">
-
-          <label>メモ（任意）</label>
-          <textarea id="note" rows="3" placeholder="旅行を楽しみにしていたけど…等、正直にどうぞ"></textarea>
-
-          <p style="margin-top:12px">
-            <button class="btn" type="submit">キャンセルを依頼する</button>
-            <button class="btn ghost" type="button" onclick="suggestStayPlan()">代わりのステイプランを見る</button>
-          </p>
-        </form>
-
-        <div style="margin-top:12px;color:var(--muted)">
-          <strong>※注:</strong> 当サイトはユーモアを交えたサービスです。本当にキャンセル手続きを行う場合は、予約元の規約をご確認ください。
-        </div>
-      </section>
-
-      <section id="about" class="card" style="margin-top:18px;display:none">
-        <h2>私たちについて</h2>
-<button class="btn ghost" onclick="fadeCloseAltStay()">閉じる</button>
-        <p style="color:var(--muted)">ステイホームツアーズは、無理に旅行をすすめないことを信条とします。忙しい現代、たまには“何もしない贅沢”を。創業者は元旅行代理店スタッフと在宅エキスパートの混成チームです。</p>
-
-        <h3>よくある質問</h3>
-        <dl style="color:var(--muted)">
-          <dt>Q: なぜ旅行代理店なのに旅行を全力で止めるの？</dt>
-          <dd>A: 我々は“逆張り観光業”のパイオニアです。行かないという選択に市場価値を見出しました。</dd>
-
-          <dt>Q: 家にいたら景色が見えません。</dt>
-          <dd>A: カーテンを開けましょう。ほらもう絶景です。あなたの家の“周辺観光”が始まります。</dd>
-
-          <dt>Q: キャンセルすると何か得しますか？</dt>
-          <dd>A: 精神的優越感が得られます。「行かなかった俺…偉い！」というやつです。</dd>
-
-          <dt>Q: 旅行気分になれるアクティビティは？</dt>
-          <dd>A: 冷蔵庫を開けて“ローカルフード探索ツアー”、ベランダで“世界の風を感じる体験”などをご用意。</dd>
-
-          <dt>Q: SNSに“旅行行ってきた！”と投稿したい。</dt>
-          <dd>A: 写真はAIに頼みましょう。当社の存在価値が揺らぐので責任は負いません。</dd>
-
-          <dt>Q: Googleスプレッドシートには何が送られるの？</dt>
-          <dd>A: 旅行を諦めたあなたの強靭な意思です。未来のあなたが見て笑うでしょう。</dd>
-
-          <dt>Q: この会社、本当に儲かってます？</dt>
-          <dd>A: お察しください。でも移動しないので経費はあまりかかりません。</dd>
-
-          <dt>Q: 家にいるのにツアーと言い張る理由は？</dt>
-          <dd>A: 人生はすべて“心の旅”です。そういうことにしておきましょう。</dd>
-        </dl>
-      </section>
-
-          <section id="faq" class="card" style="margin-top:18px;display:none">
-        <h2>FAQ（よくある質問・そして誤解）</h2>
-        <dl style="color:var(--muted)">
-          <dt>Q: なぜ旅行代理店なのに旅行を勧めないのですか？</dt>
-          <dd>A: 当社は「行かない勇気」を売る最先端企業です。移動しないことで得られる幸福度を最大化します。</dd>
-
-          <dt>Q: 家にいるだけで本当に旅行した気分になれますか？</dt>
-          <dd>A: 心の問題です。心が「行った」と思えば、それはもう旅行です。脳をだましましょう。</dd>
-
-          <dt>Q: 予約してキャンセルするとどうなりますか？</dt>
-          <dd>A: ステイホームポイントが貯まります。貯めても何も起きません。</dd>
-
-          <dt>Q: 旅行先でのアクティビティはありますか？</dt>
-          <dd>A: あります。「自宅で寝る」「自宅で食べる」「自宅で動画を見る」の3大アクティビティをご用意。</dd>
-
-          <dt>Q: 友達に“旅行してきた”と言いたいのですが？</dt>
-          <dd>A: 当社発行の“行った気になれる証明書（非公式）”をどうぞご利用ください。</dd>
-
-          <dt>Q: Googleスプレッドシートには何が送られますか？</dt>
-          <dd>A: あなたが旅行しない決意です。未来のあなたも喜びます。</dd>
-        </dl>
-      </section>
-    </main>
-
-    <footer>
-      © StayHome Tours — 旅行をやめて、家で良い時間を。 | <a href="#" style="color:var(--muted);text-decoration:none" onclick="showPrivacy();return false">プライバシーポリシー</a>
-    </footer>
+  <div class="progress-container" id="progressArea">
+    <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <!-- モーダル -->
-  <div id="modal" class="modal">
-    <div class="box">
-      <h3 id="modalTitle">キャンセルのご提案</h3>
-      <p id="modalBody">処理中...</p>
-      <div class="voucher" id="voucherBox" style="display:none">
-        <strong>キャンセル推奨バウチャー</strong>
-        <p id="voucherText" style="margin:6px 0;color:var(--muted)"></p>
-        <p style="margin-top:8px"><button class="btn" onclick="printVoucher()">バウチャーを印刷する</button> <button class="btn ghost" onclick="closeModal()">閉じる</button></p>
-      </div>
-    </div>
-  </div>
+  <div id="errorBox"></div>
 
-  <script>
-    function showSection(id){
-      ['home','book','about','faq'].forEach(s=>document.getElementById(s).style.display=(s===id?'block':'none'));
-      document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
-      const navlink = Array.from(document.querySelectorAll('nav a')).find(a=>a.getAttribute('href')==('#'+id));
-      if(navlink) navlink.classList.add('active');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
+</section>
 
-    function downloadGuide(){
-      // ローカルに置いた cancel_tips.pdf を開く
-      const url = 'cancel_tips.pdf';
-      try{
-        window.open(url, '_blank');
-      }catch(e){
-        alert('PDF を開けませんでした。cancel_tips.pdf をHTMLと同じフォルダに置いてください。');
-      }
-    }
+<footer>© 2025 StayHomeTours</footer>
+</div>
 
-    function suggestStayPlan(){
-      const plans = [
-        'ホームシネマ夜：プロジェクターとポップコーンを手配',
-        '世界の朝ごはんキット：5か国分を週末に楽しむ',
-        'おうちスパ体験：バスソルトとアロマでリラックス',
-        'ガーデンピクニック（ベランダ版）をセッティング'
-      ];
-      const pick = plans[Math.floor(Math.random()*plans.length)];
-      showModal('代替ステイプランの提案', pick + '\n\nこのプランで週末がちょっと贅沢に変わります。');
-    }
+<script>
+/* 赤警告モード */
+const alertBtn=document.getElementById("alertToggle");
+alertBtn.addEventListener("click",()=>{
+  document.body.classList.toggle("red-alert");
+  alertBtn.textContent=document.body.classList.contains("red-alert")?"🔴 赤警告モード解除":"🔴 赤警告モード";
+});
 
-    function handleSubmit(e){
-      e.preventDefault();
-      const name = document.getElementById('name').value || 'お客様';
-      const email = document.getElementById('email').value || '';
-      const date = document.getElementById('date').value || '未定';
-      const dest = document.getElementById('destination').value || '不明';
-      const desire = Number(document.getElementById('desire').value);
-      const note = document.getElementById('note').value || '';
+/* プラン生成 12個 */
+const planData=[
+  {title:"引きこもり満喫パック",price:"¥1,980",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
+  {title:"布団縛りツアー",price:"¥980",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
+  {title:"スマホ世界一周プラン",price:"¥2,480",img:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d",desc:"世界の景色は親指が決める。"},
+  {title:"Netflix耐久旅",price:"¥1,500",img:"https://images.unsplash.com/photo-1524985069026-dd778a71c7b4",desc:"12時間視聴で脳内世界旅行。"},
+  {title:"自室秘境トレッキング",price:"¥1,100",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",desc:"部屋の隅を未踏の大地に。"},
+  {title:"ベッド沈没リゾート",price:"¥2,000",img:"https://images.unsplash.com/photo-1520880867055-1e30d1cb001c",desc:"ベッドで沈む贅沢。"},
+  {title:"無音瞑想ステイ",price:"¥980",img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b",desc:"雑音ゼロの心旅。"},
+  {title:"カーテン大陸探検",price:"¥750",img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e",desc:"光と影の世界。"},
+  {title:"深夜テンション海外旅",price:"¥1,600",img:"https://www.nightview.info/photo/spot/0261/0261_04_main.jpg",desc:"夜の妄想で世界横断。"},
+  {title:"家電サファリツアー",price:"¥1,300",img:"https://images.unsplash.com/photo-1481277542470-605612bd2d61",desc:"家電を動物に見立てて冒険。"},
+  {title:"ゴロゴロ温泉ごっこ",price:"¥900",img:"https://images.unsplash.com/photo-1519824145371-296894a0daa9",desc:"布団の中で温泉気分。"},
+  {title:"幻のバーチャル外国語旅",price:"¥2,800",img:"https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64",desc:"外国語アプリで無限旅行。"},
+];
 
-      // 簡単な判定ロジック
-      let title = '';
-      let body = '';
-      if(desire <= 3){
-        title = '強くキャンセルを推奨します';
-        body = `${name}さん、行きたい度が低めです。\n${date}に予定されている${dest}のご旅行は、今がキャンセルのタイミングかもしれません。私たちが手続きテンプレートをお送りします。`;
-      } else if(desire <= 6){
-        title = '再検討をおすすめします';
-        body = `${name}さん、まだ迷いがありますね。変更オプションや日程調整を検討してみましょう。`;
-      } else {
-        title = 'ぜひ行く価値があるかもしれません';
-        body = `${name}さんの行きたい度は高めです。安全情報を付けて、行く場合のチェックリストを準備します。`;
-      }
+const planList=document.getElementById("planList");
+const favoriteList=document.getElementById("favoriteList");
+let favorites=[];
 
-      showModal(title, body);
-
-      // バウチャー内容をセット
-      const voucherText = `名前: ${name} \nメール: ${email} \n旅行予定: ${date} / ${dest} \n行きたい度: ${desire}/10\n\nおすすめ: ${(desire<=3)?'キャンセル推奨':'検討または出発推奨'}`;
-      document.getElementById('voucherText').textContent = voucherText;
-
-      // 表示コントロール
-      document.getElementById('voucherBox').style.display = 'block';
-    }
-
-    function showModal(title, body){
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalBody').textContent = body;
-      document.getElementById('modal').style.display = 'flex';
-    }
-    function closeModal(){
-      document.getElementById('modal').style.display = 'none';
-      document.getElementById('voucherBox').style.display = 'none';
-    }
-
-    function printVoucher(){
-      const w = window.open('', '_blank');
-      const content = `<!doctype html><html><head><meta charset=\"utf-8\"><title>キャンセル推奨バウチャー</title><style>body{font-family:Arial,\"Noto Sans JP\",sans-serif;padding:30px;background:#f7f9fb;color:#042024} .box{border-radius:10px;padding:18px;border:1px solid #cfd8dc;background:white}</style></head><body><div class=\"box\"><h2>StayHome Tours — キャンセル推奨バウチャー</h2><pre>${document.getElementById('voucherText').textContent}</pre><p style=\"color:#666;\">このバウチャーは参考情報です。正式なキャンセルは予約元へお問い合わせください。</p></div></body></html>`;
-      w.document.write(content);
-      w.document.close();
-      w.focus();
-      w.print();
-    }
-
-    function showPrivacy(){
-      showModal('プライバシーポリシー（簡易版）', '当サイトはフォームに入力された情報を画面表示の目的でのみ使用します。このサンプルサイトはデータを送信しません。');
-      document.getElementById('voucherBox').style.display='none';
-    }
-
-    // 初期表示
-    showSection('home');
-  function fadeCloseAltStay(){
-  const sec = document.getElementById('alt-stay');
-  sec.classList.add('fade-out');
-  setTimeout(()=>{ sec.style.display='none'; sec.classList.remove('fade-out'); },400);
+function renderPlans(){
+  planList.innerHTML="";
+  planData.forEach((p,i)=>{
+    const card=document.createElement("div");
+    card.className="plan-card";
+    card.innerHTML=`
+      <span class="favorite-btn" data-id="${i}">⭐</span>
+      <img src="${p.img}">
+      <h3>${p.title}</h3>
+      <div class="price">${p.price}</div>
+      <p>${p.desc}</p>
+    `;
+    planList.appendChild(card);
+  });
 }
+
+renderPlans();
+
+/* お気に入り機能 */
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("favorite-btn")){
+    const id=e.target.dataset.id;
+    if(!favorites.includes(id)){favorites.push(id);e.target.classList.add("active");}
+    else{favorites=favorites.filter(f=>f!==id);e.target.classList.remove("active");}
+  }
+});
+
+document.getElementById("goFavorite").addEventListener("click",()=>{
+  document.getElementById("planSection").style.display="none";
+  document.getElementById("favoritePage").style.display="block";
+  renderFavorites();
+});
+
+function renderFavorites(){
+  favoriteList.innerHTML="";
+  favorites.forEach(id=>{
+    const p=planData[id];
+    const c=document.createElement("div");
+    c.className="plan-card";
+    c.innerHTML=`<img src="${p.img}"><h3>${p.title}</h3><div class="price">${p.price}</div><p>${p.desc}</p>`;
+    favoriteList.appendChild(c);
+  });
+}
+
+/* 予約フォーム */
+const form=document.getElementById("reserveForm");
+const progressArea=document.getElementById("progressArea");
+const bar=document.getElementById("progressBar");
+const errorBox=document.getElementById("errorBox");
+
+const errorReasons=[
+  "サーバーが寝落ちしました。",
+  "通信ケーブルが布団に包まれています。",
+  "送信ボタンが押されたことに気づいていません。",
+  "データが迷子になりました。",
+  "AIが散歩に行きました。",
+  "パケットが渋滞中です。",
+  "送信者の気配を感じ取れません。",
+  "回線がスヤスヤしています。",
+  "電波がコタツに引きこもりました。",
+  "処理担当がコーヒー休憩中です。",
+  "世界線がズレました。",
+  "データが寝返りを打ち損ねました。"
+];
+
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  errorBox.style.display="none";
+  progressArea.style.display="block";
+  bar.style.width="0%";
+
+  let p=0;
+  const timer=setInterval(()=>{
+    p+=5;
+    bar.style.width=p+"%";
+
+    if(p===35){
+      clearInterval(timer);
+      const reason=errorReasons[Math.floor(Math.random()*errorReasons.length)];
+      errorBox.textContent="⚠ エラー: "+reason;
+      errorBox.style.display="block";
+      if(document.body.classList.contains("red-alert")){
+        errorBox.style.boxShadow="0 0 20px red";
+      }
+    }
+
+    if(p>=100){clearInterval(timer);}
+  },150);
+});
 </script>
+
+  <!-- 追加の旅行プラン -->
+  <section class="plans-extra">
+    <div class="plan-card">📍 火星サイレントリトリート — 重力1/3でストレスゼロ</div>
+    <div class="plan-card">📍 海底ガラスホテル — 深海の闇を楽しむプラン</div>
+    <div class="plan-card">📍 雲上パラシュート朝食会 — 朝日を頭上で浴びながら食事</div>
+    <div class="plan-card">📍 古代遺跡ナイトツアー — 99%の確率で何も起きない安心仕様</div>
+    <div class="plan-card">📍 無人島ゆったり逃避旅行 — 誰にも知られずに失踪体験</div>
+    <div class="plan-card">📍 水晶洞窟ライトアップ — 幻覚みたいに光るけど合法</div>
+    <div class="plan-card">📍 極寒アイスホテル — 一晩寝れば人生観が変わる温度</div>
+    <div class="plan-card">📍 天空図書館ステイ — 誰も来ない静寂と無限の本</div>
+    <div class="plan-card">📍 南極静止ツアー — ただ立っているだけで偉業になる旅</div>
+    <div class="plan-card">📍 世界最狭ホテル — 身動きできない安心感</div>
+  </section>
 </body>
 </html>
-あ
