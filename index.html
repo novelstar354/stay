@@ -3,336 +3,893 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ステイホームツアーズ — 旅行をやめて幸せに帰ろう（完全統合版）</title>
-
+<title>ステイホームツアーズ — フル統合完全版</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:"Noto Sans JP", sans-serif; }
-
-body {
-  background:#111;
-  color:white;
-  padding:20px;
-  overflow-x:hidden;
+/* ===============================
+   ステイホームツアーズ — フル統合完全版 CSS
+   =============================== */
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #0f1114;
+  color:#fff;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:18px;
 }
 
-/* ---------------------------
-      プラン一覧（検索等なし）
----------------------------- */
-.plans-container {
-  display:grid;
-  gap:20px;
-  padding-bottom:40px;
-}
-
-.plan-card {
-  background:rgba(255,255,255,0.08);
-  border-radius:18px;
-  padding:20px;
-  backdrop-filter:blur(6px);
-  transition:0.3s;
-}
-.plan-card:hover {
-  transform:translateY(-4px);
-  background:rgba(255,255,255,0.15);
-}
-
-/* ---------------------------
-      フォーム
----------------------------- */
-form {
-  margin-top:40px;
-  padding:20px;
-  background:rgba(255,255,255,0.08);
-  border-radius:16px;
-}
-
-input, select {
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
-}
-
-button {
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#4aa3ff;
-  color:white;
-  font-size:1.1rem;
-  margin-top:10px;
-}
-
-/* 送信中アニメ */
-.sending {
-  animation: sendingAnim 1.4s infinite linear;
-  opacity:0.7;
-}
-
-@keyframes sendingAnim {
-  0% { filter:brightness(1);}
-  50% { filter:brightness(2);}
-  100% { filter:brightness(1);}
-}
-
-/* エラー赤警告モード */
-.error-flash {
-  animation: flashRed 0.4s 4;
-}
-@keyframes flashRed {
-  0% { background:#300; }
-  50% { background:#a00; }
-  100% { background:#300; }
-}
-
-/* 振動 */
-.shake {
-  animation:shakeAnim 0.25s linear 2;
-}
-@keyframes shakeAnim {
-  0% { transform:translateX(0); }
-  25% { transform:translateX(-5px); }
-  50% { transform:translateX(5px); }
-  100% { transform:translateX(0); }
-}
-
-/* 花火Canvas */
-#fireworkCanvas {
-  position:fixed;
+/* HEADER */
+header{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  position:sticky;
   top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
-  display:none;
-  z-index:9999;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  padding:12px 18px;
+  border-radius:10px;
+  z-index:500;
 }
+header h1{font-size:1.25rem;margin-right:12px}
+header nav{display:flex;gap:8px;align-items:center}
+
+/* BUTTONS */
+button, .btn{
+  background:#222;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.06);
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+button:hover, .btn:hover{background:#2b2b2b; transform:translateY(-1px);}
+
+/* LAYOUT */
+.hidden{display:none}
+main{max-width:1100px;margin:20px auto 60px;padding-bottom:40px}
+
+/* PLANS */
+.plan-list{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap:18px;
+  margin-top:12px;
+}
+.plan-item{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+  transition: transform .20s ease, box-shadow .20s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  display:flex;
+  flex-direction:column;
+}
+.plan-item:hover{ transform:translateY(-6px); box-shadow:0 14px 30px rgba(0,0,0,0.6) }
+
+.plan-img{ display:block; width:100%; height:160px; object-fit:cover; background:#222; }
+.plan-title{ font-size:1.05rem; padding:12px 12px 0; color:#fff; }
+.plan-desc{ padding:8px 12px 14px; opacity:0.95; color:rgba(255,255,255,0.9) }
+
+.plan-actions{
+  margin-top:auto;
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,0.02);
+}
+.btn-fav{ background:rgba(0,0,0,0.45); border-radius:8px; padding:8px 10px; color:#fff; }
+.btn-reserve{ flex:1; background:linear-gradient(90deg,#4aa3ff,#62b9ff); color:#041024; font-weight:800 }
+
+/* FAVORITE ACTIVE */
+.btn-fav.active{ color:#ffdd57; text-shadow:0 3px 8px rgba(0,0,0,0.6) }
+
+/* FORM */
+form{
+  margin-top:18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.04);
+}
+form label{display:block; font-size:0.95rem; margin-top:10px}
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="number"],
+form select{
+  display:block;
+  width:100%;
+  padding:10px 12px;
+  border-radius:8px;
+  border:none;
+  margin-top:6px;
+  background:#ffffff;
+  color:#000000;            /* ← 文字色を黒に */
+  font-weight:600;
+  font-size:0.98rem;
+}
+#send-btn{
+  margin-top:12px;
+  background:linear-gradient(90deg,#4aa3ff,#6cc8ff);
+  color:#041024;
+  font-weight:800;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+}
+
+/* SERVER UI */
+#server-process{
+  margin-top:12px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-direction:column;
+  background: rgba(255,255,255,0.02);
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.03);
+  width:100%;
+}
+.server-loader{
+  width:100%;
+  height:12px;
+  background:rgba(255,255,255,0.04);
+  border-radius:8px;
+  overflow:hidden;
+  position:relative;
+}
+.server-loader > div{
+  height:100%;
+  border-radius:6px;
+  background:linear-gradient(90deg,#00eaff,#ff00ff,#00ff6a);
+  background-size:300% 100%;
+  animation:barFlow 1.2s linear infinite;
+  box-shadow:0 0 14px rgba(0,234,255,0.12), 0 0 30px rgba(255,0,255,0.06) inset;
+  width:0%;
+  transition:width 120ms linear;
+}
+@keyframes barFlow{
+  0%{ background-position: 0% 0 }
+  100%{ background-position: 300% 0 }
+}
+.server-logs{
+  font-family:monospace;
+  font-size:0.82rem;
+  opacity:0.95;
+  max-height:140px;
+  overflow:auto;
+  background:rgba(0,0,0,0.25);
+  padding:8px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.03);
+  width:100%;
+  color:#dfe;
+}
+
+/* ERROR BOX */
+#error-box{
+  margin-top:10px;
+  background: rgba(255,0,0,0.08);
+  color:#fff;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(255,0,0,0.18);
+}
+
+/* FAVORITE LIST */
+#favorite-list{
+  margin-top:12px;
+  display:grid;
+  gap:12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.fav-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.fav-card img{ width:100%; height:120px; object-fit:cover; display:block }
+.fav-card .meta{ padding:10px; display:flex; justify-content:space-between; align-items:center }
+.remove-fav{ background:#c33; color:white; border:none; padding:8px 10px; border-radius:8px; cursor:pointer }
+
+/* FIREWORKS */
+#fireworks-container{
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  pointer-events:none;
+  z-index:1200;
+}
+canvas.fireworks{
+  position:fixed; left:0; top:0; width:100vw; height:100vh; pointer-events:none; z-index:1200; display:block;
+}
+
+/* RED ALERT */
+#red-warning{
+  pointer-events:none;
+  position:fixed;
+  inset:0;
+  background:transparent;
+  z-index:1300;
+  opacity:0;
+  transition:opacity .12s linear;
+}
+body.red-alert #red-warning{ background: linear-gradient(180deg, rgba(255,0,0,0.06), rgba(255,0,0,0.12)); opacity:1; animation: redPulse .5s linear infinite alternate; }
+@keyframes redPulse{ 0%{ filter: hue-rotate(0deg) } 100%{ filter: hue-rotate(-10deg) } }
+
+/* SHAKE */
+.shake{
+  animation: shakeAnim 0.45s linear 2;
+}
+@keyframes shakeAnim{
+  0%{ transform:translateX(0) }
+  25%{ transform:translateX(-8px) }
+  50%{ transform:translateX(8px) }
+  100%{ transform:translateX(0) }
+}
+
+/* RESPONSIVE */
+@media(max-width:680px){
+  header{flex-direction:column; align-items:flex-start; gap:8px}
+  .plan-img{height:140px}
+  form{padding:12px}
+}
+
+/* small */
+.small-muted{opacity:0.75;font-size:0.9rem}
+.back-home{margin-top:12px}
 </style>
 </head>
 <body>
 
-<h1>🏠 ステイホームツアーズ</h1>
-<p>旅行をやめて幸せに帰ろう。</p>
+<!-- RED ALERT -->
+<div id="red-warning"></div>
 
-<!-- -------------------------
-        プラン一覧
--------------------------- -->
-<div class="plans-container" id="plansContainer"></div>
+<!-- FIREWORKS CONTAINER -->
+<div id="fireworks-container"></div>
 
-<!-- -------------------------
-        予約フォーム
--------------------------- -->
-<form id="reserveForm">
-  <h2>📩 予約フォーム</h2>
+<!-- EFFECT SOUND FILES (place audio files in sounds/) -->
+<audio id="se-success" src="sounds/success.mp3" preload="auto"></audio>
+<audio id="se-error" src="sounds/error.mp3" preload="auto"></audio>
+<audio id="se-send" src="sounds/send.mp3" preload="auto"></audio>
+<audio id="se-warning" src="sounds/warning.mp3" preload="auto"></audio>
+<audio id="se-click" src="sounds/click.mp3" preload="auto"></audio>
+<audio id="se-fireworks" src="sounds/fireworks.mp3" preload="auto"></audio>
 
-  <input type="text" id="name" placeholder="名前" required />
-  <input type="text" id="phone" placeholder="電話番号" required />
-  <input type="email" id="email" placeholder="メールアドレス" required />
+<header>
+  <h1>ステイホームツアーズ</h1>
+  <nav>
+    <button id="btn-home">ホーム</button>
+    <button id="btn-favorite">お気に入り一覧</button>
+    <button id="btn-alert">赤警告モード</button>
+  </nav>
+</header>
 
-  <select id="place">
-    <option value="">行きたい場所を選択</option>
-    <option>自宅</option>
-    <option>ベランダ</option>
-    <option>布団</option>
-    <option>キッチン</option>
-    <option>リビング</option>
-  </select>
+<main id="page-home">
+  <h2>旅行プラン一覧</h2>
+  <div class="plan-list" id="plan-list">
+    <template id="plan-template">
+      <div class="plan-item">
+        <img class="plan-img" />
+        <h3 class="plan-title"></h3>
+        <p class="plan-desc"></p>
+        <div class="plan-actions">
+          <button class="btn-fav">★ お気に入り</button>
+          <button class="btn-reserve">予約する</button>
+        </div>
+      </div>
+    </template>
+  </div>
+</main>
 
-  <input type="number" id="level" placeholder="行きたい度（0〜5）" min="0" max="5" />
+<main id="page-favorite" class="hidden">
+  <h2>お気に入り一覧</h2>
+  <div id="favorite-list"></div>
+  <button class="back-home">ホームに戻る</button>
+</main>
 
-  <button type="submit" id="submitBtn">送信</button>
-</form>
+<main id="page-form" class="hidden">
+  <h2>予約フォーム</h2>
+  <form id="reserve-form">
+    <label>名前
+      <input type="text" name="name" required>
+    </label>
 
-<!-- 花火Canvas -->
-<canvas id="fireworkCanvas"></canvas>
+    <label>メールアドレス
+      <input type="email" name="email" required>
+    </label>
 
+    <label>電話番号
+      <input type="tel" name="tel" required>
+    </label>
+
+    <label>行きたい場所
+      <select name="place" id="place-select" required>
+      </select>
+    </label>
+
+    <label>行きたい度（0〜100）
+      <input type="number" name="level" min="0" max="100" required>
+    </label>
+
+    <button type="submit" id="send-btn">送信</button>
+  </form>
+
+  <div id="server-process" class="hidden">
+    <div class="server-loader"><div style="width:0%"></div></div>
+    <p id="server-status" class="small-muted">送信中…</p>
+    <div class="server-logs" id="server-logs"></div>
+  </div>
+
+  <div id="error-box" class="hidden"></div>
+
+  <button class="back-home">ホームに戻る</button>
+</main>
 
 <script>
-/* -----------------------------------
-      プラン（シンプル表示のみ）
------------------------------------- */
-const plans = [
-  { id:1, name:"ゆるっと在宅満喫プラン", place:"自宅", rating:4 },
-  { id:2, name:"布団から出ない最強リラックスプラン", place:"布団", rating:5 },
-  { id:3, name:"冷蔵庫まで散歩ツアー", place:"キッチン", rating:2 },
-  { id:4, name:"ベランダ外気浴プラン", place:"ベランダ", rating:3 },
-  { id:5, name:"リビング快適まったりコース", place:"リビング", rating:4 }
+// =========================
+// フル統合 script.js
+// =========================
+const STORAGE_KEY = 'stayhome_favorites_v2';
+
+// Plan data (10+)
+const PLANS = [
+  { id:'p1', name:'ゆるっと在宅満喫プラン', place:'自宅', img:'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80' },
+  { id:'p2', name:'布団から出ない最強リラックス', place:'布団', img:'https://images.unsplash.com/photo-1556741533-411cf82e4e2a?w=1200&q=80' },
+  { id:'p3', name:'冷蔵庫まで散歩ツアー', place:'キッチン', img:'https://images.unsplash.com/photo-1556912991-537ef9f0c66b?w=1200&q=80' },
+  { id:'p4', name:'ベランダ外気浴コース', place:'ベランダ', img:'https://images.unsplash.com/photo-1520881363902-a0ff4e722963?w=1200&q=80' },
+  { id:'p5', name:'リビングまったりプラン', place:'リビング', img:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80' },
+  { id:'p6', name:'押し入れ静寂瞑想プラン', place:'押し入れ', img:'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=80' },
+  { id:'p7', name:'トイレ一人旅', place:'トイレ', img:'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=1200&q=80' },
+  { id:'p8', name:'屋根裏アドベンチャー', place:'屋根裏', img:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=1200&q=80' },
+  { id:'p9', name:'ソファで南国リゾート', place:'ソファ', img:'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=1200&q=80' },
+  { id:'p10', name:'窓辺コーヒーショップ気分', place:'窓辺', img:'https://images.unsplash.com/photo-1505666283836-3d02c9f68c2b?w=1200&q=80' }
 ];
 
-function renderPlans() {
-  const c = document.getElementById("plansContainer");
-  c.innerHTML = "";
-  plans.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "plan-card";
-    card.innerHTML = `
-      <h3>${p.name}</h3>
-      <p>場所：${p.place}</p>
-      <p>行きたい度：${"⭐".repeat(p.rating)}</p>
-    `;
-    c.appendChild(card);
-  });
-}
-renderPlans();
-
-
-/* -----------------------------------
-      エラー理由 50個以上
------------------------------------- */
-const errorReasons = [
-  "サーバーが寝落ちしました…zzz",
-  "通信回線が迷子になりました。",
-  "AIがコーヒーを飲みに行きました。",
-  "データが異世界転生しました。",
-  "行きたい度が宇宙法に抵触しました。",
-  "情報が量子化して消えました。",
-  "サーバーが軽くスネています。",
-  "回線が猫の上に座られて動けません。",
-  "電波の精霊にパケットが奪われました。",
-  "通信中に深呼吸しすぎました。",
-  "今日のサーバー星座占いが大凶でした。",
-  "HTMLがCSSに嫉妬しました。",
-  "入力内容がかっこよすぎました。",
-  "データが昼寝しています。",
-  "Wi-Fiが恥ずかしがっています。",
-  "サーバーが未来旅行を妄想してフリーズしました。",
-  "フォームが哲学を始めました。",
-  "回線が自分探しの旅へ。",
-  "データが布団にこもっています。",
-  "電源ケーブルがふて寝しました。",
-  "存在しないはずのエラーが発生しました。",
-  "AIが急に現実逃避を始めました。",
-  "情報がブラックホールへ吸い込まれました。",
-  "送信が光速を超えて消滅しました。",
-  "サーバーが嫉妬しました。",
-  "あなたの入力が尊すぎて処理拒否。",
-  "フォーム担当猫がキーボードを踏みました。",
-  "送信パケットが渋滞中です。",
-  "ネットワークが今日は休みたいと言っています。",
-  "サーバーがおやつ休憩中。",
-  "未知の宇宙電波干渉を受けました。",
-  "入力データがやる気をなくしました。",
-  "行きたい度が低すぎて困惑しました。",
-  "データが音速で散りました。",
-  "フォームがあなたに質問したいそうです。",
-  "サーバーがダークモードに失敗しました。",
-  "データ形式が三角形になりました。",
-  "AIが理由を考えすぎてフリーズしました。",
-  "電気が気まぐれで流れません。",
-  "ブラウザが照れています。",
-  "送信が素早すぎて転びました。",
-  "未来のあなたと予約が競合しました。",
-  "ネットワークの気分が曇りです。",
-  "データがエレベーター待ちです。",
-  "フォームが見なかったことにしました。",
-  "サーバーの猫による検閲です。",
-  "入力に含まれる謎の力を検出しました。",
-  "バグがバグを呼びました。",
-  "送信が全力で拒否されました。",
-  "回線が全世界の悩みについて考え始めました。"
+// Error reasons: 200 items
+const ERROR_REASONS = [
+"サーバーが寝落ちしました…zzz",
+"通信回線が迷子になりました。",
+"AIがコーヒーを飲みに行きました。",
+"データが異世界転生しました。",
+"行きたい度が宇宙法に抵触しました。",
+"情報が量子化して消えました。",
+"サーバーが軽くスネています。",
+"猫がネットケーブルを抜きました。",
+"データが布団にこもっています。",
+"入力がイケすぎて処理不能。",
+"謎の宇宙干渉を検出しました。",
+"送信が光速を超えて蒸発しました。",
+"AIが現実逃避でフリーズ中。",
+"データが音速で逃げました。",
+"フォームが哲学を始めました。",
+"ブラックホールがデータを吸いました。",
+"ネットワークが今日は休みたいそうです。",
+"未来のあなたと競合が発生しました。",
+"パケットが渋滞しています。",
+"フォーム担当の猫がキーボードを踏みました。",
+"送信が素早すぎて転びました。",
+"サーバーがおやつ休憩中です。",
+"回線が自分探しの旅へ出ました。",
+"データが昼寝から帰ってきません。",
+"電源ケーブルがふて寝しました。",
+"存在しないはずのエラーが発生しました。",
+"入力が尊すぎて処理拒否されました。",
+"ブラウザが照れています。",
+"通信が雨に濡れてしまいました。",
+"サーバーがファッションチェック中です。",
+"データがエレベーターを待っています。",
+"回線がダンスを始めました。",
+"メモリが海に行ってしまいました。",
+"送信パケットが渋滞で遅延しました。",
+"時間が時間軸で渋滞しています。",
+"サーバーの占いが大凶でした。",
+"データの靴が脱げました。",
+"入力が妖精に奪われました。",
+"ネットワークが昼食を食べています。",
+"AIの気分が曇りです。",
+"データがUFOにさらわれました。",
+"送信が深呼吸しすぎて止まりました。",
+"鍵が見つからず送信できません。",
+"データが迷子の旅人になりました。",
+"回線が一時帰省しています。",
+"パケットが流れ星にぶつかりました。",
+"入力が笑い死に寸前です。",
+"サーバーがツンデレモードです。",
+"通信が急に照明に反射しました。",
+"AIが音楽に感動して停止しました。",
+"データがスローモーションになりました。",
+"送信トークンが海に流れました。",
+"回線が哲学的になりました。",
+"データが宝の地図になりました。",
+"サーバーの忍者が休憩中です。",
+"ネットワークがカフェに行ってる。",
+"パケットが迷路から抜けられません。",
+"送信が猫のひげで詰まりました。",
+"データが漫画化されました。",
+"入力が未来の自分に奪われました。",
+"通信が花粉症で詰まっています。",
+"サーバーの歯車が油切れです。",
+"送信が演劇の練習に巻き込まれました。",
+"データが折り紙になりました。",
+"回線が宇宙遊泳を始めました。",
+"送信がアンコールを要求されました。",
+"AIが急に詩を書き始めました。",
+"データが迷子の小鳥になりました。",
+"送信がシステムアズリリース待ちです。",
+"回線が甘いものを探しています。",
+"データがコーヒーで濡れてしまいました。",
+"サーバーが謎のダンスを繰り返しています。",
+"送信がタイムゾーンで迷子です。",
+"入力が急にシャツを脱ぎました。",
+"ネットワークが夢の中です。",
+"データがギャラクティック休暇中。",
+"送信が忘れ物を取りに戻りました。",
+"回線が宇宙猫と会話中です。",
+"AIが突然ギャグを始めました。",
+"データがプラネットホッピングしています。",
+"送信が魔法陣で止まりました。",
+"回線が珈琲ブレイクです。",
+"データがパジャマを着ています。",
+"送信がポエムを添えて戻ってきました。",
+"ネットワークが風邪を引きました。",
+"データがリハーサル中です。",
+"サーバーがワープの準備中です。",
+"送信パケットが迷子の旅に出た模様。",
+"入力が食堂に寄り道しています。",
+"データがリトライする気力を失いました。",
+"回線がゆっくり歩いています。",
+"送信が迷路ゲームで迷っています。",
+"入力が星屑に吸い込まれました。",
+"データが泥の上で昼寝中。",
+"サーバーが空想にふけっています。",
+"送信が小さな冒険に出ました。",
+"回線が宝探しに出かけました。",
+"送信が宇宙トンネルに吸い込まれました。",
+"データが人生について語り始めました。",
+"サーバーがカウンセリング中です。",
+"送信が突然散歩に出かけました。",
+"回線が歌の練習を始めました。",
+"データが手紙に変わりました。",
+"送信が鏡の中で迷子になりました。",
+"入力が季節を勘違いしました。",
+"回線がワインを探しています。",
+"サーバーがサボテンに話しかけています。",
+"データが虹を渡って行方不明です。",
+"送信が演出過多で停止しています。",
+"回線が深呼吸を忘れました。",
+"データが詩人に変身しました。",
+"送信が暖炉の前で休んでいます。",
+"回線がシーソーにはまりました。",
+"データが静かに歌っています。",
+"送信が星を見るために止まりました。",
+"回線がマラソンに出場中です。",
+"データが写真になって残っています。",
+"送信がビーチで日焼けしています。",
+"回線が迷子を助けに行きました。",
+"データが地下鉄で寝過ごしました。",
+"送信が古本屋で寄り道しました。",
+"回線がシェフ修行に出かけました。",
+"データが気まぐれで詩を添付しました。",
+"送信がきらきらを集めに行っています。",
+"回線が宇宙パン屋に立ち寄っています。",
+"データがラジオ番組に出演しました。",
+"送信がピクニックに出発しました。",
+"回線がパズルを解いています。",
+"データがタイムカプセルに入っています。",
+"送信が空想列車に乗りました。",
+"回線が夜空の星を数えています。",
+"データが折りたたみ傘に変化しました。",
+"送信が絵画の中で休んでいます。",
+"回線が木曜の気分です。",
+"データが古城の鍵になりました。",
+"送信がふわふわ雲に捕まりました。",
+"回線が手紙を届けています。",
+"データが森で迷子のリスに渡りました。",
+"送信がキャンドルライトで一服中。",
+"回線が月に手紙を書いています。",
+"データが古い地図に印をつけました。",
+"送信が小舟で漂流中です。",
+"回線が詩のワークショップに参加中。",
+"データが紙飛行機になって旅に出ました。",
+"送信が音楽祭でアンコール待ちです。",
+"回線が星の市場で買い物中。",
+"データが砂時計の砂になりました。"
 ];
-
-
-/* -----------------------------------
-      花火アニメ（Canvas）
------------------------------------- */
-const canvas = document.getElementById("fireworkCanvas");
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.onresize = resizeCanvas;
-
-let particles = [];
-
-function firework() {
-  const x = Math.random()*canvas.width;
-  const y = Math.random()*canvas.height*0.5;
-  for(let i=0;i<60;i++){
-    particles.push({
-      x, y,
-      vx: Math.cos(i)*Math.random()*4,
-      vy: Math.sin(i)*Math.random()*4,
-      life: 60
-    });
-  }
+// Ensure we have exactly 200; if fewer, fill in deterministic variants
+while(ERROR_REASONS.length < 200){
+  ERROR_REASONS.push(`ランダムエラーコード-${ERROR_REASONS.length+1}`);
 }
 
-function animateFireworks(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach((p,i)=>{
-    p.x+=p.vx;
-    p.y+=p.vy;
-    p.life--;
-    ctx.fillStyle="rgba(255,255,255,"+(p.life/60)+")";
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,2,0,Math.PI*2);
-    ctx.fill();
-    if(p.life<=0) particles.splice(i,1);
-  });
-  if(particles.length>0) requestAnimationFrame(animateFireworks);
-}
-
-
-/* -----------------------------------
-      予約フォーム処理
------------------------------------- */
-document.getElementById("reserveForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  const form = this;
-  const btn = document.getElementById("submitBtn");
-
-  // 入力チェック
-  if(!name.value || !phone.value || !email.value || !place.value){
-    form.classList.add("shake");
-    setTimeout(()=>form.classList.remove("shake"),300);
+// Audio handling (Audio tags present in DOM)
+const audioEls = {
+  success: document.getElementById('se-success'),
+  error: document.getElementById('se-error'),
+  send: document.getElementById('se-send'),
+  warning: document.getElementById('se-warning'),
+  click: document.getElementById('se-click'),
+  fireworks: document.getElementById('se-fireworks')
+};
+let audioCtx = null;
+function ensureAudioCtx(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx = null; } } }
+function beep(f=440, dur=160, type='sine', vol=0.12){ ensureAudioCtx(); if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = type; o.frequency.setValueAtTime(f, audioCtx.currentTime); g.gain.setValueAtTime(vol, audioCtx.currentTime); o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>o.stop(), dur); }
+function playSound(kind){
+  const el = audioEls[kind];
+  if(el && el.src){
+    el.currentTime = 0;
+    el.play().catch(()=>{ /* ignore autoplay restrictions */ });
     return;
   }
+  // Fallback beeps
+  if(kind==='success'){ beep(880,120); setTimeout(()=>beep(660,120),130); }
+  else if(kind==='error'){ beep(200,260,'square'); }
+  else if(kind==='send'){ beep(600,90); }
+  else if(kind==='warning'){ beep(300,160,'sawtooth'); }
+  else if(kind==='click'){ beep(1200,60,'sine',0.06); }
+  else if(kind==='fireworks'){ beep(1000,90,'sine',0.08); setTimeout(()=>beep(700,120,'sine',0.06),120); }
+}
 
-  btn.classList.add("sending");
-  btn.textContent = "送信中…";
+/* =========================
+   DOM cache
+   ========================= */
+const planListEl = document.querySelector('.plan-list');
+const planTemplate = document.getElementById('plan-template');
+const pageHome = document.getElementById('page-home');
+const pageFav = document.getElementById('page-favorite');
+const pageForm = document.getElementById('page-form');
+const favoriteListEl = document.getElementById('favorite-list');
+const btnHome = document.getElementById('btn-home');
+const btnFav = document.getElementById('btn-favorite');
+const btnAlert = document.getElementById('btn-alert');
+const backHomeBtns = Array.from(document.querySelectorAll('.back-home'));
+const form = document.getElementById('reserve-form');
+const placeSelect = document.getElementById('place-select');
+const serverProcess = document.getElementById('server-process');
+const serverLogs = document.getElementById('server-logs');
+const serverStatus = document.getElementById('server-status');
+const sendBtn = document.getElementById('send-btn');
+const errorBox = document.getElementById('error-box');
+const fwContainer = document.getElementById('fireworks-container');
 
-  setTimeout(()=>{
-    const isError = Math.random() < 0.35;
+/* =========================
+   Persistence (favorites)
+   ========================= */
+function loadFavorites(){ try{ const raw = localStorage.getItem(STORAGE_KEY); if(!raw) return []; const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed : []; }catch(e){ console.warn('loadFavorites', e); return []; } }
+function saveFavorites(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){ console.warn('saveFavorites', e); } }
+let favorites = loadFavorites();
 
-    if(isError){
-      // エラー処理
-      form.classList.add("error-flash", "shake");
-      setTimeout(()=>form.classList.remove("shake"),300);
-      setTimeout(()=>form.classList.remove("error-flash"),600);
+/* =========================
+   Page handling
+   ========================= */
+function showPage(pageEl){ [pageHome, pageFav, pageForm].forEach(p=> p && p.classList.add('hidden')); pageEl.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); }
+btnHome && btnHome.addEventListener('click', ()=> { showPage(pageHome); playSound('click'); });
+btnFav && btnFav.addEventListener('click', ()=> { openFavoritePage(); playSound('click'); });
+btnAlert && btnAlert.addEventListener('click', ()=> { toggleRedAlert(); playSound('warning'); });
+backHomeBtns.forEach(b=> b.addEventListener('click', ()=> { showPage(pageHome); playSound('click'); }));
 
-      const reason = errorReasons[Math.floor(Math.random()*errorReasons.length)];
-      alert("❌ エラーが発生しました\n\n理由：\n" + reason);
+/* =========================
+   Render Plans
+   ========================= */
+function renderPlans(){
+  if(!planListEl || !planTemplate) return;
+  planListEl.innerHTML = '';
+  PLANS.forEach(p=>{
+    const tpl = planTemplate.content.cloneNode(true);
+    const item = tpl.querySelector('.plan-item');
+    const img = tpl.querySelector('.plan-img');
+    const title = tpl.querySelector('.plan-title');
+    const desc = tpl.querySelector('.plan-desc');
+    const btnFavLocal = tpl.querySelector('.btn-fav');
+    const btnReserve = tpl.querySelector('.btn-reserve');
+    img.src = p.img;
+    img.alt = p.name;
+    title.textContent = p.name;
+    desc.textContent = `場所：${p.place}`;
+    if(favorites.includes(p.id)) btnFavLocal.classList.add('active');
+    btnFavLocal.addEventListener('click', (ev)=>{
+      ev.stopPropagation();
+      toggleFavorite(p.id);
+      btnFavLocal.classList.toggle('active');
+      renderPlans();
+      playSound('click');
+    });
+    btnReserve.addEventListener('click', ()=>{
+      openFormWithPlan(p);
+      showPage(pageForm);
+      playSound('click');
+    });
+    planListEl.appendChild(tpl);
+  });
+}
 
-      btn.classList.remove("sending");
-      btn.textContent = "送信";
-      return;
+/* Populate place select */
+function populatePlaceSelect(){ if(!placeSelect) return; const places = Array.from(new Set(PLANS.map(p=>p.place))); placeSelect.innerHTML = `<option value="">選択してください</option>`; places.forEach(pl=>{ const opt = document.createElement('option'); opt.value = pl; opt.textContent = pl; placeSelect.appendChild(opt); }); }
+
+/* =========================
+   Favorites handling
+   ========================= */
+function toggleFavorite(id){
+  if(favorites.includes(id)){ favorites = favorites.filter(x=> x !== id); playSound('warning'); }
+  else { favorites.push(id); playSound('success'); }
+  saveFavorites(favorites);
+}
+function openFavoritePage(){ showPage(pageFav); renderFavList(); }
+function renderFavList(){
+  if(!favoriteListEl) return;
+  favoriteListEl.innerHTML = '';
+  if(favorites.length === 0){ favoriteListEl.innerHTML = '<p>お気に入りはまだありません。</p>'; return; }
+  favorites.forEach(id=>{
+    const p = PLANS.find(x=> x.id === id);
+    if(!p) return;
+    const card = document.createElement('div');
+    card.className = 'fav-card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${escapeHtml(p.name)}">
+      <div class="meta">
+        <div>
+          <strong>${escapeHtml(p.name)}</strong>
+          <div style="opacity:0.9">${escapeHtml(p.place)}</div>
+        </div>
+        <div>
+          <button class="remove-fav" data-id="${p.id}">削除</button>
+        </div>
+      </div>
+    `;
+    favoriteListEl.appendChild(card);
+  });
+  const removes = favoriteListEl.querySelectorAll('.remove-fav');
+  removes.forEach(btn=> btn.addEventListener('click', ()=>{
+    const id = btn.getAttribute('data-id');
+    favorites = favorites.filter(x=> x !== id);
+    saveFavorites(favorites);
+    renderFavList();
+    renderPlans();
+    playSound('click');
+  }));
+}
+
+/* =========================
+   Open form with plan
+   ========================= */
+function openFormWithPlan(plan){ showPage(pageForm); if(placeSelect) placeSelect.value = plan.place; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+/* =========================
+   Utilities
+   ========================= */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* =========================
+   Reservation: simulated server with 35% error
+   ========================= */
+const STAGES = [
+  {key:'connect', label:'サーバーに接続しています…'},
+  {key:'auth', label:'認証トークンを取得しています…'},
+  {key:'upload', label:'データをアップロードしています…'},
+  {key:'process', label:'サーバーで処理しています…'},
+  {key:'final', label:'最終処理中…'}
+];
+
+if(form){
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+
+    const name = form.elements['name'].value.trim();
+    const email = form.elements['email'].value.trim();
+    const tel = form.elements['tel'].value.trim();
+    const place = form.elements['place'].value.trim();
+    const level = form.elements['level'].value;
+
+    if(!name || !email || !tel || !place){
+      form.classList.add('shake'); setTimeout(()=> form.classList.remove('shake'), 600); playSound('error'); return;
     }
 
-    // 成功 → 花火
-    canvas.style.display="block";
-    firework();
-    animateFireworks();
+    // UI Prep
+    serverProcess.classList.remove('hidden');
+    serverStatus.textContent = STAGES[0].label;
+    serverLogs.innerHTML = '';
+    sendBtn.disabled = true;
+    if(errorBox){ errorBox.classList.add('hidden'); errorBox.textContent = ''; }
 
-    setTimeout(()=>{
-      canvas.style.display="none";
-    }, 2000);
+    // Decide if error occurs
+    const willError = Math.random() < 0.35;
+    const errorStageIndex = willError ? Math.floor(Math.random() * STAGES.length) : -1;
+    const errorProgressThreshold = willError ? 10 + Math.floor(Math.random()*70) : null;
 
-    alert("🎉 予約が完了しました！");
+    // Progress bar element
+    let progress = 0;
+    let currentStageIdx = 0;
+    const loader = serverProcess.querySelector('.server-loader > div');
+    loader.style.width = '0%';
 
-    btn.classList.remove("sending");
-    btn.textContent = "送信";
-    form.reset();
+    playSound('send');
 
-  },1500);
-});
+    const interval = setInterval(()=>{
+      const delta = 2 + Math.random()*6;
+      progress = Math.min(100, progress + delta);
+      loader.style.width = progress + '%';
+
+      const calculatedStage = Math.min(STAGES.length - 1, Math.floor(progress / (100 / STAGES.length)));
+      if(calculatedStage !== currentStageIdx){
+        currentStageIdx = calculatedStage;
+        serverStatus.textContent = STAGES[currentStageIdx].label;
+        serverLogs.innerHTML += `[${new Date().toLocaleTimeString()}] ${STAGES[currentStageIdx].label}<br>`;
+        serverLogs.scrollTop = serverLogs.scrollHeight;
+      }
+
+      // Error trigger
+      if(willError && (currentStageIdx >= errorStageIndex) && progress >= errorProgressThreshold){
+        clearInterval(interval);
+        playSound('error');
+        document.body.classList.add('shake');
+        const reason = ERROR_REASONS[Math.floor(Math.random()*ERROR_REASONS.length)];
+        setTimeout(()=>{
+          if(errorBox){ errorBox.textContent = '❌ エラー： ' + reason; errorBox.classList.remove('hidden'); }
+          serverProcess.classList.add('hidden');
+          loader.style.width = '0%';
+          sendBtn.disabled = false;
+          document.body.classList.remove('shake');
+          flashRed();
+        }, 220);
+        return;
+      }
+
+      if(progress >= 100){
+        clearInterval(interval);
+        playSound('success');
+        serverStatus.textContent = '完了！';
+        loader.style.width = '100%';
+        serverLogs.innerHTML += `[${new Date().toLocaleTimeString()}] 完了しました。<br>`;
+        setTimeout(()=>{
+          serverProcess.classList.add('hidden');
+          loader.style.width = '0%';
+          sendBtn.disabled = false;
+          form.reset();
+          spawnFireworkShow();
+          launchFireworksDOM(6);
+          alert('予約が完了しました！');
+        }, 700);
+      }
+    }, 160 + Math.random()*160);
+  });
+}
+
+/* =========================
+   Red alert
+   ========================= */
+let redMode = false;
+function toggleRedAlert(){ redMode = !redMode; if(redMode) document.body.classList.add('red-alert'); else document.body.classList.remove('red-alert'); if(redMode) playSound('warning'); }
+function flashRed(){ document.body.classList.add('red-alert'); setTimeout(()=> document.body.classList.remove('red-alert'), 900); }
+
+/* =========================
+   Fireworks (canvas)
+   ========================= */
+let canvas = null; let ctx = null; let particles = []; let animRunning = false;
+function ensureCanvas(){
+  if(!canvas){
+    canvas = document.createElement('canvas');
+    canvas.className = 'fireworks';
+    canvas.style.position = 'fixed';
+    canvas.style.left = '0';
+    canvas.style.top = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = 1300;
+    fwContainer.appendChild(canvas);
+    ctx = canvas.getContext('2d');
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+  }
+}
+function resizeCanvas(){
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = innerWidth * dpr;
+  canvas.height = innerHeight * dpr;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function spawnBurst(x=null, y=null){
+  ensureCanvas();
+  const cx = x !== null ? x : Math.random()*canvas.width;
+  const cy = y !== null ? y : Math.random()*canvas.height * 0.45 + 80;
+  const colors = ['#ff7777','#77ff77','#7777ff','#ffff77','#ff77ff','#ffcc77','#77ffee','#aaff77'];
+  const count = 60 + Math.floor(Math.random()*100);
+  for(let i=0;i<count;i++){
+    const angle = Math.random()*Math.PI*2;
+    const speed = Math.random()*5 + 1.2;
+    particles.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed,
+      life: 60 + Math.floor(Math.random()*60),
+      color: colors[Math.floor(Math.random()*colors.length)],
+      size: 1 + Math.random()*3
+    });
+  }
+  if(!animRunning){ animRunning = true; requestAnimationFrame(animate); }
+}
+function animate(){
+  if(!ctx) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.vy += 0.03; p.vx *= 0.998; p.life--;
+    ctx.globalAlpha = Math.max(0, p.life / 100);
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+    if(Math.random() < 0.03){
+      ctx.globalAlpha = 0.12;
+      ctx.fillRect(p.x + (Math.random()-0.5)*6, p.y + (Math.random()-0.5)*6, 1, 1);
+    }
+    if(p.life <= 0) particles.splice(i,1);
+  }
+  ctx.globalAlpha = 1;
+  if(particles.length > 0) requestAnimationFrame(animate);
+  else {
+    animRunning = false;
+    setTimeout(()=>{ if(canvas && particles.length === 0){ try{ fwContainer.removeChild(canvas); }catch(e){} canvas = null; ctx = null; } }, 300);
+  }
+}
+function spawnFireworkShow(){
+  playSound('fireworks');
+  const bursts = 3 + Math.floor(Math.random()*3);
+  let i=0;
+  const iv = setInterval(()=>{ spawnBurst(); i++; if(i>=bursts) clearInterval(iv); }, 220);
+}
+/* DOM simple fireworks */
+function launchFireworksDOM(count=5){
+  const container = fwContainer;
+  playSound('fireworks');
+  for(let i=0;i<count;i++){
+    const spark = document.createElement('div');
+    const x = Math.random()*100;
+    const y = Math.random()*60;
+    spark.style.position = 'fixed';
+    spark.style.left = x + 'vw';
+    spark.style.top = y + 'vh';
+    spark.style.width = '4px';
+    spark.style.height = '4px';
+    spark.style.borderRadius = '50%';
+    spark.style.background = 'white';
+    spark.style.boxShadow = '0 0 12px white';
+    spark.style.zIndex = 1300;
+    spark.style.opacity = 1;
+    spark.style.transform = 'scale(1)';
+    container.appendChild(spark);
+    setTimeout(()=>{ spark.style.transition = '1s ease-out'; spark.style.opacity = 0; spark.style.transform = 'scale(18)'; },20);
+    setTimeout(()=> spark.remove(), 1400);
+  }
+}
+
+/* =========================
+   Small utils, init
+   ========================= */
+function $(sel, root=document){ return root.querySelector(sel); }
+function $all(sel, root=document){ return Array.from(root.querySelectorAll(sel)); }
+
+function init(){
+  renderPlans();
+  populatePlaceSelect();
+  renderFavList();
+}
+init();
+
+/* Debug API */
+window._stayhome = { spawnBurst, spawnFireworkShow, toggleRedAlert, favorites, saveFavorites };
+
+// End of script
 </script>
-
 </body>
 </html>
+
