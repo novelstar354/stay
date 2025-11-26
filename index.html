@@ -7,17 +7,18 @@
 <style>
 /* RESET */
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Noto Sans JP",sans-serif;}
-body{background:#0b0b0b;color:white;overflow-x:hidden;}
-.wrapper{max-width:1200px;margin:0 auto;padding:0 20px;width:100%;}
+html,body{height:100%;}
+body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+.wrapper{max-width:1100px;margin:0 auto;padding:20px;width:100%;}
 
 /* HERO */
-.hero{text-align:center;padding:80px 0 60px;}
-.hero h1{font-size:2.4rem;font-weight:700;margin-bottom:20px;}
-.hero p{font-size:1.2rem;opacity:0.8;}
+.hero{text-align:center;padding:48px 10px 36px;}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:8px;letter-spacing:0.6px;}
+.hero p{font-size:1rem;opacity:0.9;margin-bottom:12px;}
 
 /* 赤警告ボタン */
-#alertToggle{margin-top:25px;padding:15px 35px;font-size:1.2rem;border:none;border-radius:50px;background:red;color:white;cursor:pointer;animation:glow 2s infinite;box-shadow:0 0 20px red;}
-@keyframes glow{0%{box-shadow:0 0 8px red;}50%{box-shadow:0 0 20px red;}100%{box-shadow:0 0 8px red;}}
+#alertToggle{margin-top:12px;padding:10px 20px;font-size:1rem;border:none;border-radius:50px;background:#b30000;color:white;cursor:pointer;animation:glow 2s infinite;box-shadow:0 0 14px rgba(255,0,0,0.25);}
+@keyframes glow{0%{box-shadow:0 0 6px rgba(255,0,0,0.2);}50%{box-shadow:0 0 22px rgba(255,0,0,0.45);}100%{box-shadow:0 0 6px rgba(255,0,0,0.2);}}
 
 /* 赤警告モード */
 .red-alert{background:#2b0000!important;}
@@ -25,114 +26,89 @@ body{background:#0b0b0b;color:white;overflow-x:hidden;}
 .red-alert .pulsing{animation:pulse .6s infinite;}
 @keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
 
-/* PLANS */
-.plans{margin-top:60px;}
-.plans h2{text-align:center;font-size:1.9rem;margin-bottom:25px;}
-.plan-list{display:grid;grid-template-columns:1fr;gap:25px;}
-@media(min-width:800px){.plan-list{grid-template-columns:repeat(3,1fr);}}
-.plan-card{background:#131313;border-radius:15px;padding:20px;box-shadow:0 0 15px rgba(255,255,255,0.07);text-align:center;transition:.3s;position:relative;}
-.plan-card:hover{transform:translateY(-5px);box-shadow:0 0 25px rgba(255,255,255,0.12);} 
-.plan-card img{width:100%;height:170px;object-fit:cover;border-radius:12px;margin-bottom:15px;}
-.plan-card .price{font-size:1.5rem;margin:12px 0;color:#ffd166;}
-.favorite-btn{position:absolute;top:10px;right:10px;font-size:1.6rem;cursor:pointer; opacity:0.8;}
-.favorite-btn.active{color:#ff4d4d;opacity:1;}
+.row{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;}
+.col{flex:1 1 300px;}
 
-/* お気に入りページ */
-#favoritePage{display:none;padding:50px 0;}
-#favoritePage h2{text-align:center;margin-bottom:20px;}
-#favoriteList{display:grid;grid-template-columns:1fr;gap:20px;}
-@media(min-width:800px){#favoriteList{grid-template-columns:repeat(3,1fr);}}
+/* PLANS */
+.plans{margin-top:28px;}
+.plans h2{text-align:center;font-size:1.4rem;margin-bottom:14px;}
+.plan-list{display:grid;grid-template-columns:1fr;gap:18px;}
+@media(min-width:900px){.plan-list{grid-template-columns:repeat(3,1fr);}}
+.plan-card{background:#131313;border-radius:12px;padding:14px;box-shadow:0 0 12px rgba(255,255,255,0.04);text-align:center;transition:.25s;position:relative;overflow:hidden;}
+.plan-card:hover{transform:translateY(-6px);box-shadow:0 0 28px rgba(255,255,255,0.08);}
+.plan-card img{width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
+.plan-card .price{font-size:1.1rem;margin:8px 0;color:#ffd166;}
+.favorite-btn{position:absolute;top:10px;right:10px;font-size:1.4rem;cursor:pointer; opacity:0.9;padding:6px;border-radius:8px;background:rgba(0,0,0,0.3);}
+.favorite-btn.active{color:#ff4d4d;background:rgba(255,255,255,0.04);}
+
+/* お気に入りページ (モーダル風) */
+#favoritePage{display:none;padding:20px 0;}
+#favoritePage h2{text-align:center;margin-bottom:12px;}
+#favoriteList{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:900px){#favoriteList{grid-template-columns:repeat(3,1fr);}}
 
 /* FORM */
-.form-section{margin-top:70px;}
-form{display:flex;flex-direction:column;gap:18px;margin-top:20px;}
-input,select,textarea{padding:12px 15px;border:none;border-radius:10px;background:#222;color:white;font-size:1rem;}
-button.submitBtn{padding:15px;background:#00b7ff;border:none;border-radius:10px;color:black;font-size:1.2rem;cursor:pointer;transition:.2s;}
-button.submitBtn:hover{background:#4dd6ff;}
+.form-section{margin-top:28px;}
+.form-section h2{font-size:1.2rem;margin-bottom:10px;}
+form{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+input,select,textarea{padding:12px 14px;border:none;border-radius:10px;background:#181818;color:white;font-size:0.98rem;border:1px solid rgba(255,255,255,0.04);}
+input::placeholder{opacity:0.6;}
+button.submitBtn{padding:12px;background:#00b7ff;border:none;border-radius:10px;color:black;font-size:1rem;cursor:pointer;transition:.2s;}
+button.submitBtn:hover{background:#33c8ff;transform:translateY(-2px);}
 
 /* 送信アニメーション */
-.progress-container{width:100%;background:#333;height:12px;border-radius:10px;margin-top:10px;overflow:hidden;display:none;}
-.progress-bar{height:100%;width:0%;background:#00b7ff;transition:0.2s;}
+.progress-container{width:100%;background:#222;height:12px;border-radius:10px;margin-top:10px;overflow:hidden;display:none;position:relative;}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#00b7ff,#44e0ff,#00b7ff);transition:width 0.18s linear;background-size:200% 100%;}
+@keyframes wave {0%{background-position:0 0;}100%{background-position:200% 0;}}
 
 /* エラー画面 */
-#errorBox{display:none;margin-top:25px;padding:20px;background:#400;border-left:6px solid red;border-radius:10px;}
+#errorBox{display:none;margin-top:12px;padding:16px;background:#400;border-left:6px solid red;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.6);}
 
-footer{margin:80px 0 40px;text-align:center;opacity:0.6;}
+/* エフェクト */
+@keyframes flash {0%{opacity:1;}50%{opacity:0.25;}100%{opacity:1;}}
+@keyframes shake {0%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
 
-.glow-btn{animation:glowbtn 1.8s infinite;box-shadow:0 0 10px #fff;}@keyframes glowbtn{0%{box-shadow:0 0 6px #fff;}50%{box-shadow:0 0 18px #fff;}100%{box-shadow:0 0 6px #fff;}}
-.red-alert .glow-btn{animation:redglow 1.2s infinite;box-shadow:0 0 12px red !important;}@keyframes redglow{0%{box-shadow:0 0 6px red;}50%{box-shadow:0 0 22px red;}100%{box-shadow:0 0 6px red;}}
-/* ---- 全ボタン共通のかっこいいデザイン ---- */
+/* 成功ボックス */
+.success{display:none;margin-top:12px;padding:16px;background:linear-gradient(135deg,#062,#098);border-left:6px solid #2f6;border-radius:10px;color:#051505;}
+
+/* コンフェティ */
+.confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:10000;}
+
+/* 全ボタン共通のかっこいいデザイン */
 button, .glow-btn, #alertToggle, .submitBtn{
   border:none;
   border-radius:14px;
-  padding:14px 28px;
-  font-size:1.1rem;
-  font-weight:600;
+  padding:10px 18px;
+  font-size:1rem;
+  font-weight:700;
   cursor:pointer;
   background:linear-gradient(135deg,#1e1e1e,#2c2c2c);
   color:white;
-  letter-spacing:0.5px;
+  letter-spacing:0.4px;
   transition:0.25s ease;
-  box-shadow:0 0 10px rgba(255,255,255,0.25);
-  animation:allglow 2.2s infinite;
-}
-button:hover{
-  transform:translateY(-3px) scale(1.03);
-  box-shadow:0 0 18px rgba(255,255,255,0.45);
-}
-@keyframes allglow{
-  0%{ box-shadow:0 0 6px rgba(255,255,255,0.35); }
-  50%{ box-shadow:0 0 22px rgba(255,255,255,0.7); }
-  100%{ box-shadow:0 0 6px rgba(255,255,255,0.35); }
+  box-shadow:0 0 10px rgba(255,255,255,0.12);
 }
 
-/* ---- 赤警告モード時の赤い発光 ---- */
+/* 赤警告時全体赤発光 */
 .red-alert button,
 .red-alert .glow-btn,
 .red-alert #alertToggle,
 .red-alert .submitBtn{
   background:linear-gradient(135deg,#4d0000,#7a0000) !important;
-  animation:redallglow 1.4s infinite !important;
   box-shadow:0 0 14px red !important;
 }
-@keyframes redallglow{
-  0%{ box-shadow:0 0 8px rgba(255,0,0,0.5); }
-  50%{ box-shadow:0 0 26px rgba(255,0,0,1); }
-  100%{ box-shadow:0 0 8px rgba(255,0,0,0.5); }
-}
-/* 衝撃波エフェクト */
-.button, .glow-btn, button {
-  position: relative;
-  overflow: hidden;
-}
-.button:active::after,
-.glow-btn:active::after,
-button:active::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  animation: shockwave 0.6s ease-out;
-}
-@keyframes shockwave {
-  0% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(18); }
-}
 
-  footer {
-           padding: 30px;
-           text-align: center;
-           font-size: 0.85rem;
-           color: rgba(255,255,255,0.5);
-           border-top: 1px solid rgba(255,255,255,0.1);
-           margin-top: 60px;
-       }
+/* その他 */
+.back-btn{display:inline-block;margin-top:12px;background:#444;padding:8px 12px;border-radius:8px;text-decoration:none;color:white;}
+.plans-extra{margin-top:20px;display:grid;grid-template-columns:1fr;gap:10px;}
+@media(min-width:900px){.plans-extra{grid-template-columns:repeat(2,1fr);}}
 
+/* responsive tweaks */
+@media(max-width:640px){
+  .hero h1{font-size:1.6rem;}
+  .plan-card img{height:120px;}
+  .wrapper{padding:12px;}
+}
 </style>
 </head>
 <body>
@@ -142,9 +118,10 @@ button:active::after {
   <h1>ステイホームツアーズ</h1>
   <p>旅行しないという最高の贅沢。あなたの家が、今日から世界最高の観光地に。</p>
   <button id="alertToggle">🔴 赤警告モード</button>
-  <br>
-  <button id="goFavorite" style="margin-top:20px;padding:10px 25px;font-size:1rem;border-radius:10px;border:none;cursor:pointer;background:#ffaa00;color:black;">⭐ お気に入りを見る</button>
-  <a href="#" id="backToMain" class="glow-btn" style="display:inline-block;margin-bottom:20px;padding:10px 20px;background:#444;border-radius:10px;color:white;text-decoration:none;">← 元のページへ戻る</a>
+  <div style="margin-top:12px;">
+    <button id="goFavorite" style="margin-top:6px;padding:8px 14px;font-size:0.95rem;border-radius:10px;border:none;cursor:pointer;background:#ffaa00;color:black;">⭐ お気に入りを見る</button>
+    <a href="#" id="backToMain" class="back-btn" style="display:none;">← 元のページへ戻る</a>
+  </div>
 </section>
 
 <section class="plans" id="planSection">
@@ -160,13 +137,13 @@ button:active::after {
 <section class="form-section">
   <h2>予約フォーム</h2>
 
-  <form id="reserveForm">
-    <input type="text" name="name" placeholder="名前" required>
-    <input type="email" name="email" placeholder="メールアドレス" required>
-    <input type="text" name="tel" placeholder="電話番号（任意）">
-    <input type="text" name="place" placeholder="行きたい場所（家の中でもOK）" required>
+  <form id="reserveForm" novalidate>
+    <input id="name" type="text" name="name" placeholder="名前" required>
+    <input id="email" type="email" name="email" placeholder="メールアドレス" required>
+    <input id="tel" type="text" name="tel" placeholder="電話番号（任意）">
+    <input id="place" type="text" name="place" placeholder="行きたい場所（家の中でもOK）" required>
 
-    <select name="level" required>
+    <select id="level" name="level" required>
       <option value="">行きたい度</option>
       <option value="0">0（行かない）</option>
       <option value="1">1（まあ行かない）</option>
@@ -181,24 +158,18 @@ button:active::after {
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <div id="errorBox"></div>
-
+  <div id="errorBox" role="alert"></div>
+  <div id="successBox" class="success" role="status"></div>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
 </section>
 
-<footer>© 2025 StayHomeTours</footer>
+<footer style="margin-top:40px;text-align:center;opacity:0.6;">© 2025 StayHomeTours</footer>
 </div>
 
 <script>
-/* 赤警告モード */
-const alertBtn=document.getElementById("alertToggle");
-alertBtn.addEventListener("click",()=>{
-  document.body.classList.toggle("red-alert");
-  alertBtn.textContent=document.body.classList.contains("red-alert")
-  ? "🔴 赤警告モード解除"
-  : "🔴 赤警告モード";
-});
-
-/* プラン生成 */
+/* ----------------------------
+   基本 UI / プラン / お気に入り
+   ---------------------------- */
 const planData=[
   {title:"引きこもり満喫パック",price:"¥1,980",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
   {title:"布団縛りツアー",price:"¥980",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
@@ -214,64 +185,86 @@ const planData=[
   {title:"幻のバーチャル外国語旅",price:"¥2,800",img:"https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64",desc:"外国語アプリで無限旅行。"},
 ];
 
-const planList=document.getElementById("planList");
-const favoriteList=document.getElementById("favoriteList");
-let favorites=[];
+const planList = document.getElementById('planList');
+const favoriteList = document.getElementById('favoriteList');
+const goFavoriteBtn = document.getElementById('goFavorite');
+const backToMain = document.getElementById('backToMain');
+const planSection = document.getElementById('planSection');
+const favoritePage = document.getElementById('favoritePage');
+let favorites = JSON.parse(localStorage.getItem('sht_favorites')||'[]');
 
+/* render plans */
 function renderPlans(){
-  planList.innerHTML="";
+  planList.innerHTML='';
   planData.forEach((p,i)=>{
-    const card=document.createElement("div");
-    card.className="plan-card";
-    card.innerHTML=`
-      <span class="favorite-btn" data-id="${i}">⭐</span>
-      <img src="${p.img}">
+    const card = document.createElement('div');
+    card.className='plan-card';
+    const active = favorites.includes(String(i)) ? 'active' : '';
+    card.innerHTML = `
+      <button class="favorite-btn ${active}" data-id="${i}" aria-label="お気に入り">${active?'★':'☆'}</button>
+      <img src="${p.img}" alt="${p.title}">
       <h3>${p.title}</h3>
       <div class="price">${p.price}</div>
-      <p>${p.desc}</p>
+      <p style="opacity:0.85">${p.desc}</p>
     `;
     planList.appendChild(card);
   });
 }
-
 renderPlans();
 
-/* お気に入り */
-document.addEventListener("click",e=>{
-  if(e.target.classList.contains("favorite-btn")){
-    const id=e.target.dataset.id;
-    if(!favorites.includes(id)){favorites.push(id);e.target.classList.add("active");}
-    else{favorites=favorites.filter(f=>f!==id);e.target.classList.remove("active");}
-  }
-});
-
-document.getElementById("goFavorite").addEventListener("click",()=>{
-  document.getElementById("planSection").style.display="none";
-  document.getElementById("favoritePage").style.display="block";
-  renderFavorites();
-});
-
 function renderFavorites(){
-  favoriteList.innerHTML="";
+  favoriteList.innerHTML='';
+  if(favorites.length===0){
+    favoriteList.innerHTML = '<p style="opacity:0.7;text-align:center;padding:18px;">お気に入りはまだありません。</p>';
+    return;
+  }
   favorites.forEach(id=>{
-    const p=planData[id];
-    const c=document.createElement("div");
-    c.className="plan-card";
-    c.innerHTML=`<img src="${p.img}"><h3>${p.title}</h3><div class="price">${p.price}</div><p>${p.desc}</p>`;
+    const p = planData[id];
+    const c = document.createElement('div');
+    c.className='plan-card';
+    c.innerHTML = `<img src="${p.img}" alt="${p.title}"><h3>${p.title}</h3><div class="price">${p.price}</div><p style="opacity:0.85">${p.desc}</p>`;
     favoriteList.appendChild(c);
   });
 }
 
-/* ---------------------------
-    予約フォーム強化版
----------------------------- */
-const form=document.getElementById("reserveForm");
-const progressArea=document.getElementById("progressArea");
-const bar=document.getElementById("progressBar");
-const errorBox=document.getElementById("errorBox");
+/* favorites click (delegation) */
+document.addEventListener('click', (e) => {
+  if(e.target.classList.contains('favorite-btn')){
+    const id = e.target.dataset.id;
+    if(!favorites.includes(String(id))){
+      favorites.push(String(id));
+      e.target.classList.add('active');
+      e.target.textContent = '★';
+    } else {
+      favorites = favorites.filter(f=>f!==String(id));
+      e.target.classList.remove('active');
+      e.target.textContent = '☆';
+    }
+    localStorage.setItem('sht_favorites', JSON.stringify(favorites));
+    renderPlans();
+  }
+});
 
-/* エラー理由 30個に増量 */
-const errorReasons=[
+/* show favorites / back */
+goFavoriteBtn.addEventListener('click', ()=> {
+  planSection.style.display='none';
+  favoritePage.style.display='block';
+  backToMain.style.display='inline-block';
+  renderFavorites();
+});
+backToMain.addEventListener('click', (e)=>{ e.preventDefault(); planSection.style.display='block'; favoritePage.style.display='none'; backToMain.style.display='none'; });
+
+/* ----------------------------
+   予約フォーム強化（検証・送信演出・35%確率）
+   ---------------------------- */
+const form = document.getElementById('reserveForm');
+const progressArea = document.getElementById('progressArea');
+const bar = document.getElementById('progressBar');
+const errorBox = document.getElementById('errorBox');
+const successBox = document.getElementById('successBox');
+const confettiRoot = document.getElementById('confetti');
+
+const errorReasons = [
   "サーバーが寝落ちしました。","通信ケーブルが布団に包まれています。","送信ボタンが押されたことに気づいていません。",
   "データが迷子になりました。","AIが散歩に行きました。","パケットが渋滞中です。","送信者の気配を感じ取れません。",
   "回線がスヤスヤしています。","電波がコタツに引きこもりました。","処理担当がコーヒー休憩中です。",
@@ -284,94 +277,177 @@ const errorReasons=[
   "電子の流れが逆走しました。","未知のエラーが未知のままです。"
 ];
 
-/* 画面赤フラッシュ */
+/* helper: simple validations */
+function isEmail(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+function isPhone(v){
+  if(!v) return true; // optional
+  return /^[0-9+\-\s()]{6,20}$/.test(v);
+}
+
+/* visual effects */
 function screenFlash(){
-  const flash=document.createElement("div");
-  flash.style.position="fixed";
-  flash.style.top=0;
-  flash.style.left=0;
-  flash.style.width="100%";
-  flash.style.height="100%";
-  flash.style.background="rgba(255,0,0,0.35)";
-  flash.style.zIndex=9999;
-  flash.style.pointerEvents="none";
-  flash.style.animation="flash .35s ease-out";
+  const flash = document.createElement('div');
+  flash.style.position='fixed';
+  flash.style.top=0; flash.style.left=0;
+  flash.style.width='100%'; flash.style.height='100%';
+  flash.style.background='rgba(255,0,0,0.28)';
+  flash.style.zIndex=9999; flash.style.pointerEvents='none';
+  flash.style.animation='flash 0.35s ease-out';
   document.body.appendChild(flash);
-  setTimeout(()=>flash.remove(),400);
+  setTimeout(()=>flash.remove(),380);
+}
+function shakeError(){
+  errorBox.style.animation = 'shake 0.6s';
+  setTimeout(()=>errorBox.style.animation = '',700);
 }
 
-/* 成功メッセージ */
-function showSuccess(){
-  errorBox.style.display="block";
-  errorBox.style.background="#0a3";
-  errorBox.style.borderLeft="6px solid #2f6";
-  errorBox.textContent="✔ 送信が完了しました！ ステイホームツアーズへようこそ。";
+/* confetti: simple DOM particles */
+function launchConfetti(count=30){
+  confettiRoot.innerHTML = '';
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.style.position='absolute';
+    el.style.width = (6 + Math.random()*10)+'px';
+    el.style.height = (8 + Math.random()*12)+'px';
+    el.style.left = (Math.random()*100)+'%';
+    el.style.top = '-10px';
+    el.style.opacity = 0.95;
+    el.style.transform = 'rotate('+Math.random()*360+'deg)';
+    el.style.background = ['#ffd166','#ef476f','#06d6a0','#118ab2','#a7c957'][Math.floor(Math.random()*5)];
+    el.style.borderRadius = '2px';
+    el.style.zIndex = 10001;
+    el.style.transition = 'transform 2.2s linear, top 2.2s linear, opacity 0.5s linear';
+    confettiRoot.appendChild(el);
+    // animate
+    setTimeout(()=> {
+      el.style.top = (60 + Math.random()*80)+'vh';
+      el.style.left = (Math.random()*100)+'%';
+      el.style.transform = 'rotate('+ (360 + Math.random()*720) +'deg) translateY(20px)';
+      el.style.opacity = 0.95;
+    }, 20 + Math.random()*180);
+    // fade
+    setTimeout(()=>{ el.style.opacity = '0'; }, 2000 + Math.random()*800);
+    setTimeout(()=>{ try{ el.remove(); }catch(e){} }, 3000 + Math.random()*800);
+  }
 }
 
-/* 送信風アニメ波 */
-bar.style.background="linear-gradient(90deg,#00b7ff,#44e0ff,#00b7ff)";
-bar.style.backgroundSize="200% 100%";
-bar.style.animation="wave 1.2s linear infinite";
+/* success UI */
+function showSuccess(name){
+  progressArea.style.display='none';
+  successBox.style.display='block';
+  successBox.textContent = `✔ 送信が完了しました！ ${name||''} さん、ステイホームツアーズへようこそ。`;
+  launchConfetti(36);
+  setTimeout(()=>{ successBox.style.display='none'; }, 5500);
+}
 
-form.addEventListener("submit",e=>{
+/* reset states */
+function resetProgress(){
+  bar.style.width='0%';
+  progressArea.style.display='none';
+}
+
+/* main submit flow */
+form.addEventListener('submit', (e)=>{
   e.preventDefault();
-  errorBox.style.display="none";
-  errorBox.style.background="#400";
-  progressArea.style.display="block";
-  bar.style.width="0%";
+  // hide previous
+  errorBox.style.display='none';
+  successBox.style.display='none';
 
-  let p=0;
+  // read values and validate
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const tel = document.getElementById('tel').value.trim();
+  const place = document.getElementById('place').value.trim();
+  const level = document.getElementById('level').value;
 
-  const timer=setInterval(()=>{
+  if(!name || !email || !place || level===''){
+    errorBox.textContent = '⚠ 必須項目をすべて入力してください（名前・メール・場所・行きたい度）。';
+    errorBox.style.display='block';
+    shakeError();
+    return;
+  }
+  if(!isEmail(email)){
+    errorBox.textContent = '⚠ メールアドレスの形式が正しくありません。';
+    errorBox.style.display='block';
+    shakeError();
+    return;
+  }
+  if(!isPhone(tel)){
+    errorBox.textContent = '⚠ 電話番号の形式が正しくありません（半角数字＋記号で6〜20文字）。';
+    errorBox.style.display='block';
+    shakeError();
+    return;
+  }
 
-    p+=5;
-    bar.style.width=p+"%";
+  // start progress
+  progressArea.style.display='block';
+  bar.style.width='0%';
+  let p = 0;
 
-    /* 35% の地点で確率判定 */
-    if(p===35){
+  const timer = setInterval(()=>{
+    p += 5 + Math.floor(Math.random()*6 - 2); // 少しランダムに進む
+    if(p<0) p=0;
+    if(p>100) p=100;
+    bar.style.width = p + '%';
 
-      const isAlert=document.body.classList.contains("red-alert");
-      const errorChance=isAlert ? 0.70 : 0.35;
+    // when hitting 35% threshold do a probabilistic error (35% or 70% when red-alert)
+    if(p >= 35 && p < 35+8){ // trigger once around 35
+      const isAlert = document.body.classList.contains('red-alert');
+      const errorChance = isAlert ? 0.70 : 0.35; // red mode doubles chance
 
       if(Math.random() < errorChance){
         clearInterval(timer);
-
-        const reason=errorReasons[Math.floor(Math.random()*errorReasons.length)];
-        errorBox.textContent="⚠ エラー: "+reason;
-        errorBox.style.display="block";
-
-        screenFlash(); // 赤フラッシュ
-
-        return; // 送信停止
+        const reason = errorReasons[Math.floor(Math.random()*errorReasons.length)];
+        errorBox.textContent = '⚠ エラー: '+reason;
+        errorBox.style.display='block';
+        // visual
+        if(isAlert) screenFlash();
+        shakeError();
+        // stop progress and reset after a moment so user can retry
+        setTimeout(()=>{ resetProgress(); }, 1600);
+        return;
       }
     }
 
-    /* 成功ルート */
-    if(p>=100){
+    // success finish
+    if(p >= 100){
       clearInterval(timer);
-      showSuccess();
+      showSuccess(name);
+      // optionally: clear form
+      form.reset();
+      setTimeout(()=>{ resetProgress(); }, 1200);
     }
 
-  },150);
+  }, 140);
 });
+
+/* initialize progress bar wave */
+bar.style.backgroundSize = '200% 100%';
+bar.style.animation = 'wave 1.2s linear infinite';
+
+/* 赤警告 toggle */
+const alertBtn = document.getElementById('alertToggle');
+alertBtn.addEventListener('click', ()=>{
+  document.body.classList.toggle('red-alert');
+  alertBtn.textContent = document.body.classList.contains('red-alert') ? '🔴 赤警告モード解除' : '🔴 赤警告モード';
+});
+
+/* initialize favorites UI states (sync buttons) */
+renderPlans();
+
+/* accessibility: allow clearing favorites via longpress? Not necessary, but add simple double-click on goFavorite to clear */
+goFavoriteBtn.addEventListener('dblclick', ()=>{
+  if(confirm('お気に入りを全部クリアしますか？')){
+    favorites = [];
+    localStorage.setItem('sht_favorites', JSON.stringify(favorites));
+    renderPlans();
+    renderFavorites();
+    alert('お気に入りをすべてクリアしました。');
+  }
+});
+
 </script>
-
-  <!-- 追加の旅行プラン -->
-  <section class="plans-extra">
-    <div class="plan-card">📍 火星サイレントリトリート — 重力1/3でストレスゼロ</div>
-    <div class="plan-card">📍 海底ガラスホテル — 深海の闇を楽しむプラン</div>
-    <div class="plan-card">📍 雲上パラシュート朝食会 — 朝日を頭上で浴びながら食事</div>
-    <div class="plan-card">📍 古代遺跡ナイトツアー — 99%の確率で何も起きない安心仕様</div>
-    <div class="plan-card">📍 無人島ゆったり逃避旅行 — 誰にも知られずに失踪体験</div>
-    <div class="plan-card">📍 水晶洞窟ライトアップ — 幻覚みたいに光るけど合法</div>
-    <div class="plan-card">📍 極寒アイスホテル — 一晩寝れば人生観が変わる温度</div>
-    <div class="plan-card">📍 天空図書館ステイ — 誰も来ない静寂と無限の本</div>
-    <div class="plan-card">📍 南極静止ツアー — ただ立っているだけで偉業になる旅</div>
-    <div class="plan-card">📍 世界最狭ホテル — 身動きできない安心感</div>
-  </section>
-    <footer>
-       © 2025 STAR CORPORATION - All Rights Reserved.
-   </footer>
-
 </body>
 </html>
