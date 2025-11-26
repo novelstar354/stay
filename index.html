@@ -33,7 +33,7 @@ body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:ant
 /* PLANS */
 .plans{margin-top:18px;}
 .plans h2{text-align:center;font-size:1.25rem;margin-bottom:12px;}
-.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;align-items:center;}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
 .controls input, .controls select{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#111;color:white;}
 .plan-list{display:grid;grid-template-columns:1fr;gap:12px;}
 @media(min-width:900px){.plan-list{grid-template-columns:repeat(3,1fr);}}
@@ -43,11 +43,6 @@ body{background:#0b0b0b;color:white;overflow-x:hidden;-webkit-font-smoothing:ant
 .plan-card .price{font-size:1.05rem;margin:6px 0;color:#ffd166;}
 .favorite-btn{position:absolute;top:10px;right:10px;font-size:1.2rem;cursor:pointer; opacity:0.9;padding:6px;border-radius:8px;background:rgba(0,0,0,0.28);}
 .favorite-btn.active{color:#ff4d4d;background:rgba(255,255,255,0.03);}
-
-/* フィルタチェックボックス */
-.checkbox-group{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-.checkbox-group label{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;font-size:0.95rem;}
-.checkbox-group input[type="checkbox"]{accent-color:#ffaa00;transform:scale(1.02);}
 
 /* お気に入りページ */
 #favoritePage{display:none;padding:12px 0;}
@@ -132,24 +127,21 @@ button, .glow-btn, #alertToggle, .submitBtn{
 
   <div class="controls" aria-hidden="false" style="margin-top:8px;">
     <input id="searchInput" type="search" placeholder="検索（例：Netflix、布団、温泉）" style="min-width:180px;">
-    <!-- 複数カテゴリチェックボックス -->
-    <div class="checkbox-group" id="categoryFilters" aria-label="カテゴリフィルタ">
-      <label><input type="checkbox" value="relax"> 癒し系</label>
-      <label><input type="checkbox" value="comfy"> 省エネ系</label>
-      <label><input type="checkbox" value="wild"> 妄想系</label>
-      <label><input type="checkbox" value="fun"> おふざけ系</label>
-    </div>
-
-    <select id="sortSelect" aria-label="並べ替え">
+    <select id="filterCategory">
+      <option value="all">カテゴリ: すべて</option>
+      <option value="relax">癒し系</option>
+      <option value="comfy">省エネ系</option>
+      <option value="wild">妄想系</option>
+      <option value="fun">おふざけ系</option>
+    </select>
+    <select id="sortSelect">
       <option value="default">並べ替え: 推奨順</option>
       <option value="price-asc">価格: 安い順</option>
       <option value="price-desc">価格: 高い順</option>
       <option value="name-asc">名前: A→Z</option>
       <option value="name-desc">名前: Z→A</option>
-      <option value="price-band">価格帯順（安い→普通→高い）</option>
       <option value="random">ランダム</option>
     </select>
-
     <button id="clearFilters" style="background:#333;color:white;padding:8px 10px;border-radius:8px;">フィルタ解除</button>
   </div>
 
@@ -196,331 +188,278 @@ button, .glow-btn, #alertToggle, .submitBtn{
 <!-- 花火キャンバス（フルスクリーン） -->
 <canvas id="fireworksCanvas"></canvas>
 
-   <script>
+<script>
 /* ----------------------------
-  データ：12プラン（サンプル）
----------------------------- */
-const PLANS = [
-  { id:1, name:"布団で極上温泉", desc:"毛布に包まれて温泉気分。入浴剤で旅情を演出。", category:"relax", price:1200, img:"https://picsum.photos/seed/onnsen/600/400" },
-  { id:2, name:"ベランダBBQ妄想", desc:"ベランダを使った妄想BBQ。煙は心の中で。", category:"wild", price:300, img:"https://picsum.photos/seed/bbq/600/400" },
-  { id:3, name:"Netflixマラソン", desc:"ソファで世界を周遊。ポップコーン付き。", category:"comfy", price:0, img:"https://picsum.photos/seed/netflix/600/400" },
-  { id:4, name:"おふざけ仮装ツアー", desc:"家の中でコスプレ観光。写真映え保証。", category:"fun", price:450, img:"https://picsum.photos/seed/cosplay/600/400" },
-  { id:5, name:"昼寝リトリート", desc:"窓辺で長めの昼寝。アロマがポイント。", category:"relax", price:200, img:"https://picsum.photos/seed/nap/600/400" },
-  { id:6, name:"省エネ読書パッケージ", desc:"電気を節約しつつ本の旅へ。ランプ推奨。", category:"comfy", price:350, img:"https://picsum.photos/seed/book/600/400" },
-  { id:7, name:"空想世界ツアー", desc:"頭の中で世界一周。筆記具と地図を用意。", category:"wild", price:80, img:"https://picsum.photos/seed/dream/600/400" },
-  { id:8, name:"パジャマで贅沢ディナー", desc:"家のキッチンで高級店クオリティを再現。", category:"relax", price:980, img:"https://picsum.photos/seed/dinner/600/400" },
-  { id:9, name:"ゲーム大会パック", desc:"友達とオンラインで遠征気分。景品は気持ち。", category:"fun", price:600, img:"https://picsum.photos/seed/game/600/400" },
-  { id:10, name:"省エネ瞑想ブースト", desc:"薄暗い部屋で瞑想。バッテリー節約推奨。", category:"comfy", price:150, img:"https://picsum.photos/seed/meditate/600/400" },
-  { id:11, name:"室内サファリ（ぬいぐるみ）", desc:"ぬいぐるみ達とジャングル散策。子供心を刺激。", category:"fun", price:220, img:"https://picsum.photos/seed/safari/600/400" },
-  { id:12, name:"夜想妄想シネマ", desc:"暗い部屋で自作映画を上映。演出はあなた次第。", category:"wild", price:720, img:"https://picsum.photos/seed/cinema/600/400" }
+   データ・UI 初期化（カテゴリ・価格数値）
+   ---------------------------- */
+const planData = [
+  {id:0,title:"引きこもり満喫パック",priceText:"¥1,980",price:1980,category:"relax",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",desc:"究極の静寂を味わえる。"},
+  {id:1,title:"布団縛りツアー",priceText:"¥980",price:980,category:"comfy",img:"https://www.xyl.jp/img/products/bed_s_headboard/top_sp.jpg",desc:"布団から出ない旅行。"},
+  {id:2,title:"スマホ世界一周プラン",priceText:"¥2,480",price:2480,category:"wild",img:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d",desc:"世界の景色は親指が決める。"},
+  {id:3,title:"Netflix耐久旅",priceText:"¥1,500",price:1500,category:"fun",img:"https://images.unsplash.com/photo-1524985069026-dd778a71c7b4",desc:"12時間視聴で脳内世界旅行。"},
+  {id:4,title:"自室秘境トレッキング",priceText:"¥1,100",price:1100,category:"wild",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",desc:"部屋の隅を未踏の大地に。"},
+  {id:5,title:"ベッド沈没リゾート",priceText:"¥2,000",price:2000,category:"comfy",img:"https://images.unsplash.com/photo-1520880867055-1e30d1cb001c",desc:"ベッドで沈む贅沢。"},
+  {id:6,title:"無音瞑想ステイ",priceText:"¥980",price:980,category:"relax",img:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b",desc:"雑音ゼロの心旅。"},
+  {id:7,title:"カーテン大陸探検",priceText:"¥750",price:750,category:"wild",img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e",desc:"光と影の世界。"},
+  {id:8,title:"深夜テンション海外旅",priceText:"¥1,600",price:1600,category:"fun",img:"https://www.nightview.info/photo/spot/0261/0261_04_main.jpg",desc:"夜の妄想で世界横断。"},
+  {id:9,title:"家電サファリツアー",priceText:"¥1,300",price:1300,category:"fun",img:"https://images.unsplash.com/photo-1481277542470-605612bd2d61",desc:"家電を動物に見立てて冒険。"},
+  {id:10,title:"ゴロゴロ温泉ごっこ",priceText:"¥900",price:900,category:"relax",img:"https://images.unsplash.com/photo-1519824145371-296894a0daa9",desc:"布団の中で温泉気分。"},
+  {id:11,title:"幻のバーチャル外国語旅",priceText:"¥2,800",price:2800,category:"wild",img:"https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64",desc:"外国語アプリで無限旅行。"}
 ];
 
-/* ----------------------------
-  ユーティリティ：正規化（全角→半角、かな正規化など）
----------------------------- */
-/* 全角英数字記号を半角に */
-function toHalfWidth(str){
-  // 簡易版：全角英数字と記号の変換
-  return str.replace(/[\uFF01-\uFF5E]/g, function(ch){
-    return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
-  }).replace(/\u3000/g, ' ');
-}
-
-/* ひらがなをカタカナに変換 */
-function hiraToKana(str){
-  return str.replace(/[\u3041-\u3096]/g, function(ch){
-    return String.fromCharCode(ch.charCodeAt(0) + 0x60);
-  });
-}
-
-/* 小文字大文字、空白除去、連続空白正規化 */
-function normalizeForSearch(s){
-  if(!s) return "";
-  s = s.toString();
-  s = toHalfWidth(s);
-  s = s.toLowerCase();
-  s = hiraToKana(s); // ひらがな→カタカナ
-  s = s.replace(/\s+/g,' ').trim();
-  return s;
-}
-
-/* 部分一致かどうか（正規化済み） */
-function matchesQuery(itemTextNorm, queryNorm){
-  return itemTextNorm.indexOf(queryNorm) !== -1;
-}
-
-/* ----------------------------
-  状態 (選択中のフィルタ/ソート/検索)
----------------------------- */
-let state = {
-  query: '',
-  categories: new Set(), // selected category values
-  sort: localStorage.getItem('st_lastSort') || 'default',
-};
-
-/* DOM */
 const planListEl = document.getElementById('planList');
-const searchInput = document.getElementById('searchInput');
-const categoryFiltersEl = document.getElementById('categoryFilters');
-const sortSelect = document.getElementById('sortSelect');
-const clearFiltersBtn = document.getElementById('clearFilters');
+const favoriteListEl = document.getElementById('favoriteList');
+const goFavoriteBtn = document.getElementById('goFavorite');
+const backToMain = document.getElementById('backToMain');
+const planSection = document.getElementById('planSection');
+const favoritePage = document.getElementById('favoritePage');
 
-sortSelect.value = state.sort;
+let favorites = JSON.parse(localStorage.getItem('sht_favorites')||'[]');
+let currentFilter = 'all';
+let currentSort = 'default';
+let currentSearch = '';
 
-/* ユーザーお気に入り（localStorage） */
-const FAVORITE_KEY = "st_favs_v1";
-function loadFavs(){ try{ return JSON.parse(localStorage.getItem(FAVORITE_KEY) || "[]"); }catch(e){return [];} }
-function saveFavs(arr){ localStorage.setItem(FAVORITE_KEY, JSON.stringify(arr)); }
-let favs = new Set(loadFavs());
+/* render with filter/search/sort */
+function getFilteredSortedData(){
+  let arr = planData.slice();
 
-/* ----------------------------
-  レンダリング：1回でフィルタ→検索→ソート
----------------------------- */
-function computeAndRender(){
-  const q = normalizeForSearch(state.query);
-  // collect selected categories
-  const selectedCats = Array.from(state.categories);
-  const filterByCategory = selectedCats.length > 0;
-
-  // Pre-normalize plan texts for searching
-  const processed = PLANS.map(p=>{
-    const text = `${p.name} ${p.desc} ${p.category}`;
-    const norm = normalizeForSearch(text);
-    return {...p, norm};
-  });
-
-  // Filter
-  let filtered = processed.filter(p=>{
-    // category OR logic
-    if(filterByCategory && !selectedCats.includes(p.category)) return false;
-    // search
-    if(q){
-      if(!matchesQuery(p.norm, q)) return false;
-    }
-    return true;
-  });
-
-  // Sort
-  switch(state.sort){
-    case 'price-asc':
-      filtered.sort((a,b)=> a.price - b.price);
-      break;
-    case 'price-desc':
-      filtered.sort((a,b)=> b.price - a.price);
-      break;
-    case 'name-asc':
-      filtered.sort((a,b)=> a.name.localeCompare(b.name, 'ja'));
-      break;
-    case 'name-desc':
-      filtered.sort((a,b)=> b.name.localeCompare(a.name, 'ja'));
-      break;
-    case 'price-band':
-      // price band order: cheap(0-499) -> normal(500-999) -> expensive(1000+)
-      function band(p){
-        if(p.price >= 1000) return 2;
-        if(p.price >= 500) return 1;
-        return 0;
-      }
-      filtered.sort((a,b)=> {
-        const ba = band(a), bb = band(b);
-        if(ba !== bb) return ba - bb;
-        return a.price - b.price;
-      });
-      break;
-    case 'random':
-      for(let i=filtered.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
-      }
-      break;
-    default:
-      // default: recommended — keep original order by id
-      filtered.sort((a,b)=> a.id - b.id);
+  // filter
+  if(currentFilter !== 'all'){
+    arr = arr.filter(p=>p.category === currentFilter);
   }
 
-  renderPlanList(filtered);
+  // search (title + desc)
+  if(currentSearch.trim()!==''){
+    const q = currentSearch.trim().toLowerCase();
+    arr = arr.filter(p => (p.title + ' ' + p.desc + ' ' + p.priceText).toLowerCase().includes(q));
+  }
+
+  // sort
+  switch(currentSort){
+    case 'price-asc': arr.sort((a,b)=>a.price-b.price); break;
+    case 'price-desc': arr.sort((a,b)=>b.price-a.price); break;
+    case 'name-asc': arr.sort((a,b)=>a.title.localeCompare(b.title)); break;
+    case 'name-desc': arr.sort((a,b)=>b.title.localeCompare(a.title)).reverse(); break;
+    case 'random': arr.sort(()=>Math.random()-0.5); break;
+    default: /* keep original order */ break;
+  }
+  return arr;
 }
 
-/* 画面描画 */
-function renderPlanList(plans){
+function renderPlans(){
+  const data = getFilteredSortedData();
   planListEl.innerHTML = '';
-  if(plans.length === 0){
-    planListEl.innerHTML = `<div style="text-align:center;padding:24px;color:rgba(255,255,255,0.6);">結果がありません。フィルタや検索条件を確認してください。</div>`;
+  if(data.length === 0){
+    planListEl.innerHTML = '<p style="opacity:0.7;padding:16px;text-align:center;">一致するプランがありません。</p>';
     return;
   }
-
-  const frag = document.createDocumentFragment();
-  plans.forEach(p=>{
-    const card = document.createElement('article');
+  data.forEach(p=>{
+    const card = document.createElement('div');
     card.className = 'plan-card';
-    card.setAttribute('data-id', p.id);
-
-    const favActive = favs.has(p.id.toString()) ? 'active' : '';
-
+    const active = favorites.includes(String(p.id)) ? 'active' : '';
     card.innerHTML = `
-      <button class="favorite-btn ${favActive}" aria-label="お気に入り" title="お気に入り">❤</button>
-      <img src="${p.img}" alt="${p.name}">
-      <h3 style="margin:8px 0 4px;">${p.name}</h3>
-      <div style="font-size:0.9rem;opacity:0.9;height:44px;overflow:hidden;">${p.desc}</div>
-      <div class="price">${p.price === 0 ? '無料' : p.price.toLocaleString() + '円'}</div>
-      <div style="margin-top:8px;font-size:0.85rem;opacity:0.8;">カテゴリ: ${p.category}</div>
+      <button class="favorite-btn ${active}" data-id="${p.id}" aria-label="お気に入り">${active? '★':'☆'}</button>
+      <img src="${p.img}" alt="${p.title}">
+      <h3>${p.title}</h3>
+      <div class="price">${p.priceText}</div>
+      <p style="opacity:0.85">${p.desc}</p>
     `;
-    frag.appendChild(card);
-
-    // favorite toggle
-    const favBtn = card.querySelector('.favorite-btn');
-    favBtn.addEventListener('click', ()=>{
-      toggleFavorite(p.id, favBtn);
-    });
+    planListEl.appendChild(card);
   });
-
-  planListEl.appendChild(frag);
 }
-
-/* favorite トグル */
-function toggleFavorite(id, btnEl){
-  const sid = id.toString();
-  if(favs.has(sid)){
-    favs.delete(sid);
-    btnEl.classList.remove('active');
-  } else {
-    favs.add(sid);
-    btnEl.classList.add('active');
-  }
-  saveFavs(Array.from(favs));
-}
-
-/* ----------------------------
-  UI イベント：検索（デバウンスで高速）
----------------------------- */
-let debounceTimer = null;
-function debounce(func, wait){
-  return function(...args){
-    if(debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(()=> func.apply(this, args), wait);
-  };
-}
-
-const onSearchInput = debounce((ev)=>{
-  state.query = ev.target.value || '';
-  computeAndRender();
-}, 120);
-
-searchInput.addEventListener('input', onSearchInput);
-
-/* カテゴリチェックボックスの変更 */
-categoryFiltersEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
-  cb.addEventListener('change', (e)=>{
-    const val = e.target.value;
-    if(e.target.checked) state.categories.add(val);
-    else state.categories.delete(val);
-    computeAndRender();
-  });
-});
-
-/* ソート変更 */
-sortSelect.addEventListener('change', (e)=>{
-  state.sort = e.target.value;
-  localStorage.setItem('st_lastSort', state.sort);
-  computeAndRender();
-});
-
-/* クリアフィルタ */
-clearFiltersBtn.addEventListener('click', ()=>{
-  // search
-  searchInput.value = '';
-  state.query = '';
-  // categories
-  state.categories.clear();
-  categoryFiltersEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
-    cb.checked = false;
-  });
-  // sort reset to default
-  state.sort = 'default';
-  sortSelect.value = 'default';
-  localStorage.setItem('st_lastSort', state.sort);
-  computeAndRender();
-});
-
-/* 初期レンダリング */
-computeAndRender();
-
-/* ----------------------------
-  お気に入りページ切替
----------------------------- */
-const goFavBtn = document.getElementById('goFavorite');
-const backToMain = document.getElementById('backToMain');
-const favPage = document.getElementById('favoritePage');
-const favoriteListEl = document.getElementById('favoriteList');
-const planSection = document.getElementById('planSection');
-
-function openFavorites(){
-  planSection.style.display = 'none';
-  favPage.style.display = 'block';
-  backToMain.style.display = 'inline-block';
-  document.getElementById('goFavorite').style.display = 'none';
-  renderFavorites();
-}
-
-function closeFavorites(){
-  planSection.style.display = '';
-  favPage.style.display = 'none';
-  backToMain.style.display = 'none';
-  document.getElementById('goFavorite').style.display = '';
-  computeAndRender();
-}
-
-goFavBtn.addEventListener('click', openFavorites);
-backToMain.addEventListener('click', (e)=>{
-  e.preventDefault();
-  closeFavorites();
-});
+renderPlans();
 
 function renderFavorites(){
   favoriteListEl.innerHTML = '';
-  const favArr = Array.from(favs);
-  if(favArr.length === 0){
-    favoriteListEl.innerHTML = `<div style="text-align:center;padding:24px;color:rgba(255,255,255,0.6);">お気に入りはまだありません。</div>`;
+  if(favorites.length === 0){
+    favoriteListEl.innerHTML = '<p style="opacity:0.7;text-align:center;padding:18px;">お気に入りはまだありません。</p>';
     return;
   }
-  const frag = document.createDocumentFragment();
-  favArr.forEach(idStr=>{
-    const p = PLANS.find(x=> x.id.toString() === idStr);
+  favorites.forEach(id=>{
+    const p = planData.find(x=>x.id === Number(id));
     if(!p) return;
-    const card = document.createElement('article');
-    card.className = 'plan-card';
-    card.innerHTML = `
-      <button class="favorite-btn active" aria-label="お気に入り解除" title="お気に入り解除">❤</button>
-      <img src="${p.img}" alt="${p.name}">
-      <h3 style="margin:8px 0 4px;">${p.name}</h3>
-      <div style="font-size:0.9rem;opacity:0.9;height:44px;overflow:hidden;">${p.desc}</div>
-      <div class="price">${p.price === 0 ? '無料' : p.price.toLocaleString() + '円'}</div>
-      <div style="margin-top:8px;font-size:0.85rem;opacity:0.8;">カテゴリ: ${p.category}</div>
-    `;
-    frag.appendChild(card);
-
-    const favBtn = card.querySelector('.favorite-btn');
-    favBtn.addEventListener('click', ()=>{
-      // remove from favs then re-render favorites
-      favs.delete(p.id.toString());
-      saveFavs(Array.from(favs));
-      renderFavorites();
-    });
+    const c = document.createElement('div');
+    c.className = 'plan-card';
+    c.innerHTML = `<img src="${p.img}" alt="${p.title}"><h3>${p.title}</h3><div class="price">${p.priceText}</div><p style="opacity:0.85">${p.desc}</p>`;
+    favoriteListEl.appendChild(c);
   });
-  favoriteListEl.appendChild(frag);
 }
 
+/* favorite click delegation */
+document.addEventListener('click', (e) => {
+  if(e.target.classList.contains('favorite-btn')){
+    const id = String(e.target.dataset.id);
+    if(!favorites.includes(id)){
+      favorites.push(id);
+      e.target.classList.add('active');
+      e.target.textContent = '★';
+    } else {
+      favorites = favorites.filter(f=>f!==id);
+      e.target.classList.remove('active');
+      e.target.textContent = '☆';
+    }
+    localStorage.setItem('sht_favorites', JSON.stringify(favorites));
+    renderPlans();
+  }
+});
+
+/* favorite view toggle */
+goFavoriteBtn.addEventListener('click', ()=> {
+  planSection.style.display='none';
+  favoritePage.style.display='block';
+  backToMain.style.display='inline-block';
+  renderFavorites();
+});
+backToMain.addEventListener('click', (e)=>{ e.preventDefault(); planSection.style.display='block'; favoritePage.style.display='none'; backToMain.style.display='none'; });
+
+/* controls: search/filter/sort */
+const searchInput = document.getElementById('searchInput');
+const filterCategory = document.getElementById('filterCategory');
+const sortSelect = document.getElementById('sortSelect');
+const clearFiltersBtn = document.getElementById('clearFilters');
+
+searchInput.addEventListener('input', (e)=>{ currentSearch = e.target.value; renderPlans(); });
+filterCategory.addEventListener('change', (e)=>{ currentFilter = e.target.value; renderPlans(); });
+sortSelect.addEventListener('change', (e)=>{ currentSort = e.target.value; renderPlans(); });
+clearFiltersBtn.addEventListener('click', ()=>{ currentFilter='all'; currentSort='default'; currentSearch=''; searchInput.value=''; filterCategory.value='all'; sortSelect.value='default'; renderPlans(); });
+
 /* ----------------------------
-  予約フォーム強化（検証・送信演出・35%エラー）
----------------------------- */
+   予約フォーム強化（検証・送信演出・35%確率）
+   ---------------------------- */
 const form = document.getElementById('reserveForm');
 const progressArea = document.getElementById('progressArea');
-const progressBar = document.getElementById('progressBar');
+const bar = document.getElementById('progressBar');
 const errorBox = document.getElementById('errorBox');
 const successBox = document.getElementById('successBox');
-const canvas = document.getElementById('fireworksCanvas');
-const ctx = canvas.getContext && canvas.getContext('2d');
+const confettiRoot = document.getElementById('confetti');
 
-/* 大量のエラー理由（36個） */
 const errorReasons = [
-  "サーバーが寝ています。
+  "サーバーが寝落ちしました。","通信ケーブルが布団に包まれています。","送信ボタンが押されたことに気づいていません。",
+  "データが迷子になりました。","AIが散歩に行きました。","パケットが渋滞中です。","送信者の気配を感じ取れません。",
+  "回線がスヤスヤしています。","電波がコタツに引きこもりました。","処理担当がコーヒー休憩中です。",
+  "世界線がズレました。","データが寝返りを打ち損ねました。","衛星がくしゃみしました。",
+  "インターネットが反抗期です。","サーバーが今日だけ引きこもりモードです。","謎の時空のゆがみが発生。",
+  "通信妖精がストライキ中。","AIのやる気ゲージが0です。","ルーターがスピンしています。",
+  "データが寄り道しています。","送信ホルモンが不足しています。","暗号化の呪文が乱れました。",
+  "通信トンネルに落とし穴があります。","データが昼寝中です。","宇宙線が邪魔をしました。",
+  "ネットワークの機嫌が悪いです。","送信資格試験に落ちました。","回線が夢を見ています。",
+  "電子の流れが逆走しました。","未知のエラーが未知のままです。"
+];
+
+/* simple validators */
+function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function isPhone(v){ if(!v) return true; return /^[0-9+\-\s()]{6,20}$/.test(v); }
+
+/* error visual: flash + vibrate */
+function screenFlash(){
+  const flash = document.createElement('div');
+  flash.style.position='fixed'; flash.style.top=0; flash.style.left=0;
+  flash.style.width='100%'; flash.style.height='100%';
+  flash.style.background='rgba(255,0,0,0.28)';
+  flash.style.zIndex=9999; flash.style.pointerEvents='none';
+  flash.style.animation='flash 0.35s ease-out';
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),380);
+}
+function vibrateError(){
+  errorBox.style.animation = 'vibrate 0.6s';
+  setTimeout(()=> errorBox.style.animation = '',700);
+}
+
+/* confetti simple */
+function launchConfetti(count=24){
+  confettiRoot.innerHTML='';
+  const colors = ['#ffd166','#ef476f','#06d6a0','#118ab2','#a7c957'];
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    const w = 6 + Math.random()*10;
+    el.style.position='absolute';
+    el.style.width = w + 'px';
+    el.style.height = (w*1.3)+'px';
+    el.style.left = (40 + Math.random()*20) + '%';
+    el.style.top = '10%';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.opacity = '0.95';
+    el.style.borderRadius = '2px';
+    el.style.transform = 'translateY(-20px)';
+    el.style.transition = `transform ${1.8+Math.random()}s cubic-bezier(.2,.8,.2,1), left ${1.8+Math.random()}s linear, opacity 0.6s ease ${1.2+Math.random()}s`;
+    confettiRoot.appendChild(el);
+    setTimeout(()=> {
+      el.style.transform = `translateY(${70 + Math.random()*30}vh)`;
+      el.style.left = (10 + Math.random()*80) + '%';
+    }, 50 + Math.random()*300);
+    setTimeout(()=> el.style.opacity = '0', 1600 + Math.random()*600);
+    setTimeout(()=> { try{ el.remove(); }catch(e){} }, 3000);
+  }
+}
+
+/* fireworks system (canvas) */
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
+let cw, ch, fireworksRunning=false, fwAnimId=null;
+function resizeCanvas(){
+  cw = canvas.width = window.innerWidth;
+  ch = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+/* particle classes */
+class Firework {
+  constructor(x, y, targetX, targetY, hue){
+    this.x = x; this.y = y; this.sx = x; this.sy = y;
+    this.tx = targetX; this.ty = targetY;
+    this.hue = hue;
+    this.distanceToTarget = Math.hypot(targetX-x, targetY-y);
+    this.traveled = 0;
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while(this.coordinateCount--) this.coordinates.push([this.x, this.y]);
+    this.speed = 4 + Math.random()*2.5;
+    this.angle = Math.atan2(targetY - y, targetX - x);
+    this.acceleration = 1.02;
+    this.brightness = 50 + Math.random()*30;
+  }
+  update(index, arr){
+    this.coordinates.pop();
+    this.coordinates.unshift([this.x, this.y]);
+    const vx = Math.cos(this.angle) * this.speed;
+    const vy = Math.sin(this.angle) * this.speed;
+    this.x += vx;
+    this.y += vy;
+    this.traveled += Math.hypot(vx, vy);
+    this.speed *= this.acceleration;
+    // reached
+    if(this.traveled >= this.distanceToTarget){
+      // create particles
+      createParticles(this.tx, this.ty, this.hue);
+      arr.splice(index, 1);
+    }
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.moveTo(this.coordinates[this.coordinates.length-1][0], this.coordinates[this.coordinates.length-1][1]);
+    ctx.lineTo(this.x, this.y);
+    ctx.strokeStyle = 'hsl(' + this.hue + ', 100%, ' + this.brightness + '%)';
+    ctx.stroke();
+  }
+}
+
+class Particle {
+  constructor(x, y, hue){
+    this.x = x; this.y = y;
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while(this.coordinateCount--) this.coordinates.push([this.x, this.y]);
+    this.angle = Math.random()*Math.PI*2;
+    this.speed = Math.random()*6 + 2;
+    this.friction = 0.95;
+    this.gravity = 0.06;
+    this.hue = hue;
+    this.brightness = 60 + Math.random()*20;
+    this.alpha = 1;
+    this.decay = 0.015 + Math.random()*0.02;
+  }
+  update(index, arr){
+    this.coordinates.pop();
+   
